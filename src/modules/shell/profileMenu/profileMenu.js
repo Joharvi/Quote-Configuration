@@ -9,6 +9,10 @@ export default class ProfileMenu extends LightningElement {
 
     isOpen = false;
 
+    get avatarSrc() {
+        return import.meta.env.BASE_URL + 'images/avatar1.jpg';
+    }
+
     get ariaExpanded() {
         return this.isOpen ? 'true' : 'false';
     }
