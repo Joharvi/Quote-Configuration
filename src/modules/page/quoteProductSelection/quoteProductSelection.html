@@ -62,6 +62,14 @@
                                             <span class="slds-path__title">Product Selection</span>
                                         </a>
                                     </li>
+                                    <template lwc:if={isVersionB}>
+                                        <li class="slds-path__item qc-path__item slds-is-incomplete" role="presentation">
+                                            <a class="slds-path__link" href="javascript:void(0)" role="option" tabindex="-1" aria-selected="false" title="Tenant Configuration">
+                                                <span class="slds-path__stage"></span>
+                                                <span class="slds-path__title">Tenant Configuration</span>
+                                            </a>
+                                        </li>
+                                    </template>
                                     <li class="slds-path__item qc-path__item slds-is-incomplete" role="presentation">
                                         <a class="slds-path__link" href="javascript:void(0)" role="option" tabindex="-1" aria-selected="false" title="Pricing">
                                             <span class="slds-path__stage"></span>
@@ -93,15 +101,17 @@
                 </div>
             </div>
 
-            <!-- Quote Issues Widget -->
-            <ui-quote-issues-widget
-                product-count={selectedProducts.length}
-                issues={quoteIssues}
-                show-configure-tenant={showConfigureTenantBtn}
-                show-suggested-products={hasSelectedProducts}
-                onconfiguretenant={handleConfigureTenant}
-                onsuggestedproducts={handleSuggestedProducts}>
-            </ui-quote-issues-widget>
+            <!-- Quote Issues Widget — Version A only; Version B shows this on the Tenant Configuration page -->
+            <template lwc:if={showTenantFeatures}>
+                <ui-quote-issues-widget
+                    product-count={selectedProducts.length}
+                    issues={quoteIssues}
+                    show-configure-tenant={showConfigureTenantBtn}
+                    show-suggested-products={hasSelectedProducts}
+                    onconfiguretenant={handleConfigureTenant}
+                    onsuggestedproducts={handleSuggestedProducts}>
+                </ui-quote-issues-widget>
+            </template>
 
             <!-- Workspace: Catalog + Selected Products -->
             <div class="qc-workspace">
@@ -201,38 +211,41 @@
                             <lightning-icon icon-name="utility:cart" size="small" alternative-text="Selected Products"></lightning-icon>
                             <h2 class="qc-panel__title">{selectedCountLabel}</h2>
                         </div>
-                        <div class="qc-sel-header__controls">
-                            <lightning-combobox
-                                name="filterByTenant"
-                                label="Filter by Tenant"
-                                value=""
-                                placeholder="Filter by Tenant"
-                                options={tenantFilterOptions}
-                                variant="label-hidden"
-                                class="qc-filter-pick qc-filter-pick_sm">
-                            </lightning-combobox>
-                            <lightning-combobox
-                                name="selectCart"
-                                label="Select Cart"
-                                value=""
-                                placeholder="Select Cart"
-                                options={cartOptions}
-                                variant="label-hidden"
-                                class="qc-filter-pick qc-filter-pick_sm">
-                            </lightning-combobox>
-                            <lightning-button-icon
-                                icon-name="utility:cart"
-                                variant="border"
-                                alternative-text="Cart actions"
-                                title="Cart actions">
-                            </lightning-button-icon>
-                            <lightning-button-icon
-                                icon-name="utility:delete"
-                                variant="border"
-                                alternative-text="Delete selected products"
-                                title="Delete selected">
-                            </lightning-button-icon>
-                        </div>
+                        <!-- Header controls hidden in Version B; tenant actions live on the Tenant Configuration page -->
+                        <template lwc:if={showTenantFeatures}>
+                            <div class="qc-sel-header__controls">
+                                <lightning-combobox
+                                    name="filterByTenant"
+                                    label="Filter by Tenant"
+                                    value=""
+                                    placeholder="Filter by Tenant"
+                                    options={tenantFilterOptions}
+                                    variant="label-hidden"
+                                    class="qc-filter-pick qc-filter-pick_sm">
+                                </lightning-combobox>
+                                <lightning-combobox
+                                    name="selectCart"
+                                    label="Select Cart"
+                                    value=""
+                                    placeholder="Select Cart"
+                                    options={cartOptions}
+                                    variant="label-hidden"
+                                    class="qc-filter-pick qc-filter-pick_sm">
+                                </lightning-combobox>
+                                <lightning-button-icon
+                                    icon-name="utility:cart"
+                                    variant="border"
+                                    alternative-text="Cart actions"
+                                    title="Cart actions">
+                                </lightning-button-icon>
+                                <lightning-button-icon
+                                    icon-name="utility:delete"
+                                    variant="border"
+                                    alternative-text="Delete selected products"
+                                    title="Delete selected">
+                                </lightning-button-icon>
+                            </div>
+                        </template>
                     </div>
                     <div class="qc-sel-body">
                         <!-- Empty state -->
@@ -268,12 +281,14 @@
                                             <th class="slds-text-title_caps qc-col-qty" scope="col">
                                                 <div class="slds-truncate" title="Quantity">Quantity</div>
                                             </th>
-                                            <th class="slds-text-title_caps" scope="col">
-                                                <div class="slds-truncate" title="Tenant">Tenant</div>
-                                            </th>
-                                            <th class="qc-col-actions" scope="col">
-                                                <span class="slds-assistive-text">Actions</span>
-                                            </th>
+                                            <template lwc:if={showTenantFeatures}>
+                                                <th class="slds-text-title_caps" scope="col">
+                                                    <div class="slds-truncate" title="Tenant">Tenant</div>
+                                                </th>
+                                                <th class="qc-col-actions" scope="col">
+                                                    <span class="slds-assistive-text">Actions</span>
+                                                </th>
+                                            </template>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -309,35 +324,37 @@
                                                         class="qc-qty-input">
                                                     </lightning-input>
                                                 </td>
-                                                <td role="gridcell">
-                                                    <lightning-input
-                                                        label="Tenant"
-                                                        variant="label-hidden"
-                                                        value={product.tenantDisplay}
-                                                        read-only
-                                                        class="qc-tenant-input">
-                                                    </lightning-input>
-                                                </td>
-                                                <td role="gridcell" class="qc-col-actions">
-                                                    <div class="qc-row-actions">
-                                                        <lightning-button-icon
-                                                            icon-name="utility:edit"
-                                                            variant="border"
-                                                            alternative-text="Configure tenant"
-                                                            title="Configure tenant"
-                                                            data-id={product.id}
-                                                            onclick={handleEditTenant}>
-                                                        </lightning-button-icon>
-                                                        <lightning-button-icon
-                                                            icon-name="utility:delete"
-                                                            variant="border"
-                                                            alternative-text="Delete product"
-                                                            title="Delete"
-                                                            data-id={product.id}
-                                                            onclick={handleDeleteProduct}>
-                                                        </lightning-button-icon>
-                                                    </div>
-                                                </td>
+                                                <template lwc:if={showTenantFeatures}>
+                                                    <td role="gridcell">
+                                                        <lightning-input
+                                                            label="Tenant"
+                                                            variant="label-hidden"
+                                                            value={product.tenantDisplay}
+                                                            read-only
+                                                            class="qc-tenant-input">
+                                                        </lightning-input>
+                                                    </td>
+                                                    <td role="gridcell" class="qc-col-actions">
+                                                        <div class="qc-row-actions">
+                                                            <lightning-button-icon
+                                                                icon-name="utility:edit"
+                                                                variant="border"
+                                                                alternative-text="Configure tenant"
+                                                                title="Configure tenant"
+                                                                data-id={product.id}
+                                                                onclick={handleEditTenant}>
+                                                            </lightning-button-icon>
+                                                            <lightning-button-icon
+                                                                icon-name="utility:delete"
+                                                                variant="border"
+                                                                alternative-text="Delete product"
+                                                                title="Delete"
+                                                                data-id={product.id}
+                                                                onclick={handleDeleteProduct}>
+                                                            </lightning-button-icon>
+                                                        </div>
+                                                    </td>
+                                                </template>
                                             </tr>
                                         </template>
                                     </tbody>
@@ -358,7 +375,7 @@
                     onclick={handleBackStep}>
                 </lightning-button>
                 <lightning-button
-                    label="Pricing"
+                    label={nextStepLabel}
                     variant="brand"
                     icon-name="utility:chevronright"
                     icon-position="right"

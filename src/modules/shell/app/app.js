@@ -1,5 +1,6 @@
 import { LightningElement } from 'lwc';
 import { subscribe, navigate, linkHref } from '../../../router';
+import { isQuoteSessionActive, subscribeQuoteSession } from '../../data/quoteSession/quoteSession';
 import { routes } from '../../../routes.config';
 import {
     apps,
@@ -23,6 +24,7 @@ import Dashboards from 'page/dashboards';
 import ProductBundles from 'page/productBundles';
 import QuoteConfigurator from 'page/quoteConfigurator';
 import QuoteProductSelection from 'page/quoteProductSelection';
+import QuoteTenantConfiguration from 'page/quoteTenantConfiguration';
 
 /** Option A: explicit registration – add one import + one entry here when adding a route */
 const ROUTE_COMPONENTS = {
@@ -39,6 +41,7 @@ const ROUTE_COMPONENTS = {
     'page-product-bundles': ProductBundles,
     'page-quote-configurator': QuoteConfigurator,
     'page-quote-product-selection': QuoteProductSelection,
+    'page-quote-tenant-configuration': QuoteTenantConfiguration,
 };
 
 /** Derived from routes.config: component name → nav page id (includes navHighlight for child routes) */
@@ -70,6 +73,7 @@ export default class App extends LightningElement {
     _systemColorSchemeMediaQuery = null;
     _handleSystemColorSchemeChange = null;
     _currentApp = getPersistedAppId() || DEFAULT_APP_ID;
+    _quoteTabVisible = isQuoteSessionActive();
     selectedPanel = 'agentforce_panel';
     isPanelOpen = false;
 
@@ -109,13 +113,24 @@ export default class App extends LightningElement {
     /** Pages exposed in the current app's primary nav (Standard tabs). */
     get navItems() {
         const app = getAppById(this._currentApp) || getAppById(DEFAULT_APP_ID);
-        return app.pages
+        const baseItems = app.pages
             .map((pageId) => NAV_PAGE_TO_ROUTE[pageId])
             .filter(Boolean)
             .map((r) => {
                 const path = r.navPath ?? r.path;
                 return { page: r.navPage, label: r.navLabel, path, href: linkHref(path) };
             });
+        if (this._quoteTabVisible && app.id === 'standard') {
+            const quoteRoute = NAV_PAGE_TO_ROUTE['quoteConfigurator'];
+            if (quoteRoute) {
+                const path = quoteRoute.navPath ?? quoteRoute.path;
+                return [
+                    { page: quoteRoute.navPage, label: quoteRoute.navLabel, path, href: linkHref(path) },
+                    ...baseItems,
+                ];
+            }
+        }
+        return baseItems;
     }
 
     /**
@@ -146,6 +161,9 @@ export default class App extends LightningElement {
     connectedCallback() {
         this._restorePreferences();
         this._sldsVersion = activeSLDSVersion();
+        this._unsubscribeQuoteSession = subscribeQuoteSession((active) => {
+            this._quoteTabVisible = active;
+        });
         this.unsubscribe = subscribe((route) => {
             this.route = route;
             const newApp = route?.app ?? DEFAULT_APP_ID;
@@ -212,6 +230,7 @@ export default class App extends LightningElement {
 
     disconnectedCallback() {
         this.unsubscribe?.();
+        this._unsubscribeQuoteSession?.();
         document.documentElement.classList.remove('builder-active');
         this._unbindSystemColorScheme();
     }

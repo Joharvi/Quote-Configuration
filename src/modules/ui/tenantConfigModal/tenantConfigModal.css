@@ -7,18 +7,36 @@
 }
 
 /* ============================================================
+   Body flex container — 16px gap between all sections
+   ============================================================ */
+
+.tcm-body-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--slds-g-spacing-4, 1rem);
+}
+
+/* ============================================================
    Product-context notification
    ============================================================ */
 
 .tcm-notification {
-    /* 8px bottom margin separates notification from guidance */
-    margin-bottom: var(--slds-g-spacing-3, 0.75rem);
-    border-radius: var(--slds-g-radius-border-2, 0.25rem);
-    padding: var(--slds-g-spacing-3, 0.75rem) var(--slds-g-spacing-4, 1rem);
+    display: flex;
+    align-items: center;
+    gap: var(--slds-g-spacing-3, 0.75rem);
+    background-color: var(--slds-g-color-warning-container-1, #f9e3b6);
+    border-radius: var(--slds-g-radius-border-2, 0.5rem);
+    padding: var(--slds-g-spacing-3, 0.75rem);
+    overflow: hidden;
+}
+
+.tcm-notification__icon {
+    flex-shrink: 0;
 }
 
 .tcm-notification__text {
     font-size: var(--slds-g-font-size-base, 13px);
+    font-weight: var(--slds-g-font-weight-6, 590);
     color: var(--slds-g-color-on-warning-1, #8c4b02);
     margin: 0;
     line-height: var(--slds-g-font-line-height-2, 1.375);
@@ -29,11 +47,11 @@
    ============================================================ */
 
 .tcm-guidance {
-    font-size: var(--slds-g-font-size-base, 13px);
+    font-size: var(--slds-g-font-scale-1, 0.875rem);
     color: var(--slds-g-color-on-surface-2, #2e2e2e);
-    margin: 0 0 var(--slds-g-spacing-4, 1rem) 0;
+    margin: 0;
     line-height: var(--slds-g-font-line-height-2, 1.375);
-    text-align: center;
+    text-align: left;
 }
 
 /* ============================================================
@@ -42,7 +60,6 @@
 
 .tcm-radio-group {
     display: block;
-    margin-bottom: var(--slds-g-spacing-4, 1rem);
 }
 
 /*
@@ -63,7 +80,7 @@
 .tcm-error {
     font-size: var(--slds-g-font-size-base, 13px);
     color: var(--slds-g-color-error-1, #b60554);
-    margin: calc(var(--slds-g-spacing-2, 0.5rem) * -1) 0 var(--slds-g-spacing-3, 0.75rem);
+    margin: 0;
 }
 
 /* ============================================================

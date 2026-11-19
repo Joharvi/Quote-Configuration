@@ -1,5 +1,8 @@
 import { LightningElement, track } from 'lwc';
 import TenantConfigModal from 'ui/tenantConfigModal';
+import { navigate } from '../../../router';
+import { getActiveFlowId } from '../../data/flowConfig/flowConfig';
+import { loadProducts, saveProducts, loadAssignments, saveAssignments } from '../../data/productStore/productStore';
 
 const ALL_CATALOG_ITEMS = [
     { id: '1', name: 'Sales & Service Cloud - Core Edition', price: '$190.00' },
@@ -100,6 +103,30 @@ export default class QuoteProductSelection extends LightningElement {
         return this.hasSelectedProducts ? 'qc-page qc-page_active' : 'qc-page';
     }
 
+    get isVersionB() {
+        return getActiveFlowId() === 'version-b';
+    }
+
+    get nextStepLabel() {
+        return this.isVersionB ? 'Tenant Configuration' : 'Pricing';
+    }
+
+    get showTenantFeatures() {
+        return !this.isVersionB;
+    }
+
+    connectedCallback() {
+        if (!this.isVersionB) return;
+        this._selectedProducts = loadProducts();
+        this.tenantAssignments = loadAssignments();
+    }
+
+    _syncStore() {
+        if (!this.isVersionB) return;
+        saveProducts(this._selectedProducts);
+        saveAssignments(this.tenantAssignments);
+    }
+
     /* ---- Catalog handlers ---- */
 
     handleSearchChange(event) {
@@ -123,6 +150,7 @@ export default class QuoteProductSelection extends LightningElement {
             { id: product.id, name: product.name, price: product.price, quantity: 1 },
         ];
         this.searchTerm = product.name;
+        this._syncStore();
     }
 
     handleCatalogKeydown(event) {
@@ -140,6 +168,7 @@ export default class QuoteProductSelection extends LightningElement {
                 ? { ...p, quantity: Number.isFinite(qty) && qty >= 1 ? qty : 1 }
                 : p
         );
+        this._syncStore();
     }
 
     handleDeleteProduct(event) {
@@ -148,6 +177,7 @@ export default class QuoteProductSelection extends LightningElement {
         const updated = { ...this.tenantAssignments };
         delete updated[productId];
         this.tenantAssignments = updated;
+        this._syncStore();
         if (this._selectedProducts.length === 0) {
             this.searchTerm = '';
         }
@@ -181,6 +211,7 @@ export default class QuoteProductSelection extends LightningElement {
         });
         if (result) {
             this.tenantAssignments = { ...this.tenantAssignments, [productId]: result };
+            this._syncStore();
         }
         // Restore focus to the element that triggered the modal
         if (triggerElement) {
@@ -194,7 +225,11 @@ export default class QuoteProductSelection extends LightningElement {
 
     handleBackStep() {}
 
-    handleNextStep() {}
+    handleNextStep() {
+        if (this.isVersionB) {
+            navigate('/quote/tenant-configuration');
+        }
+    }
 
     handleSaveExit() {}
 

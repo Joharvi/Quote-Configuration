@@ -1,0 +1,234 @@
+/* ============================================================
+   Path
+   ============================================================ */
+
+.opp-path-wrap {
+    display: flex;
+    align-items: center;
+    gap: var(--slds-g-spacing-2, 8px);
+    overflow: hidden;
+    border-radius: var(--slds-g-radius-border-4, 20px);
+}
+
+.opp-path__collapse-btn {
+    flex-shrink: 0;
+}
+
+.opp-path__steps {
+    display: flex;
+    flex: 1 0 0;
+    gap: var(--slds-g-spacing-2, 8px);
+    min-width: 0;
+    overflow: hidden;
+}
+
+/* Each step creates its own stacking context so the arrows
+   z-index within each step stay local */
+.opp-path__step {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: flex-start;
+    flex: 1 0 0;
+    /* 85px and 92px are path step minimum widths specific to this design;
+       no SLDS hook equivalent exists for these values */
+    min-width: 85px;
+    padding-right: var(--slds-g-spacing-3, 12px); /* room for right arrow overhang */
+}
+
+.opp-path__step_active {
+    min-width: 92px;
+}
+
+.opp-path__step_last {
+    padding-right: 0;
+    /* 74px is the minimum width for the final 'Closed' step in the design */
+    min-width: 74px;
+    align-items: center;
+}
+
+/* Stage background */
+.opp-path__stage {
+    display: flex;
+    flex: 1 0 0;
+    /* 32px is the fixed height matching the chevron SVG assets */
+    height: var(--slds-g-sizing-9, 32px);
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    position: relative;
+    z-index: 3;
+}
+
+.opp-path__stage_active {
+    background-color: var(--slds-g-color-surface-container-inverse-1, #032D60);
+    /* pill on left only; 9999px creates pill shape — no SLDS hook maps to this value */
+    border-radius: 9999px 0 0 9999px;
+    padding-left: var(--slds-g-spacing-4, 16px);
+    z-index: 2;
+}
+
+.opp-path__stage_inactive {
+    background-color: var(--slds-g-color-surface-container-3, #E5E5E5);
+    padding-right: var(--slds-g-spacing-1, 4px);
+}
+
+.opp-path__stage_last {
+    /* pill on right only */
+    border-radius: 0 9999px 9999px 0;
+    min-width: 74px;
+    padding-right: var(--slds-g-spacing-3, 12px);
+    z-index: 2;
+}
+
+/* Step labels */
+.opp-path__label {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
+    min-width: 0;
+    font-size: var(--slds-g-font-size-base, 13px);
+    /* 18px line-height is specific to this design context */
+    line-height: 18px;
+}
+
+.opp-path__label_active {
+    color: var(--slds-g-color-on-surface-inverse-1, #ffffff);
+}
+
+.opp-path__label_inactive {
+    color: var(--slds-g-color-on-surface-2, #2e2e2e);
+}
+
+/* Right chevron arrow — positioned at the right edge of each step,
+   partially overlapping the next step to form the arrow point.
+   -2px and 20px/32px match the downloaded SVG asset dimensions exactly */
+.opp-path__arrow-right {
+    position: absolute;
+    /* -2px overlap is intentional to mate the arrow with the next step bg */
+    right: -2px;
+    top: 0;
+    display: block;
+    width: var(--slds-g-sizing-6, 20px);
+    height: var(--slds-g-sizing-9, 32px);
+    z-index: 1;
+}
+
+.opp-path__step_inactive .opp-path__arrow-right {
+    z-index: 2;
+}
+
+/* Left chevron arrow — positioned at the left edge of each
+   inactive step to create the left "V" indentation.
+   -15px and 17px match the downloaded SVG asset dimensions exactly */
+.opp-path__arrow-left {
+    position: absolute;
+    /* -15px overlap is intentional so the arrow covers the previous step's edge */
+    left: -15px;
+    top: 0;
+    display: block;
+    /* 17px matches SVG root width; no SLDS hook maps to this value */
+    width: 17px;
+    height: var(--slds-g-sizing-9, 32px);
+    z-index: 1;
+}
+
+.opp-path__action {
+    flex-shrink: 0;
+}
+
+/* ============================================================
+   Key Fields / Guidance coaching section
+   ============================================================ */
+
+/* Use a custom class on the slds-card element, not an SLDS class override */
+.opp-coaching-card__surface {
+    border-radius: var(--slds-g-radius-border-4, 20px);
+}
+
+.opp-label-semibold {
+    font-weight: var(--slds-g-font-weight-6, 590);
+}
+
+/* ============================================================
+   Activity card footer
+   ============================================================ */
+
+/* Custom class applied to the slds-card__footer element directly */
+.opp-activity-card__footer {
+    text-align: center;
+    border-top: 1px solid var(--slds-g-color-border-1, #c9c9c9);
+    padding: var(--slds-g-spacing-3, 12px) var(--slds-g-spacing-4, 16px);
+    border-radius: 0 0 var(--slds-g-radius-border-4, 20px) var(--slds-g-radius-border-4, 20px);
+}
+
+/* ============================================================
+   Activity tab layout helpers
+   ============================================================ */
+
+.opp-activity__btn-groups {
+    gap: 11px; /* 11px is the design-specified gap between split button groups; no hook equivalent */
+}
+
+.opp-activity__filter-btns {
+    gap: var(--slds-g-spacing-2, 8px);
+}
+
+.opp-activity__event-title {
+    gap: var(--slds-g-spacing-1, 4px);
+}
+
+/* ============================================================
+   Record detail view-mode fields (Details tab accordion body)
+   lightning-input read-only cannot express links, inline edit
+   icons, or label help icons — using SLDS form-element blueprint
+   ============================================================ */
+
+.opp-detail__label {
+    display: block;
+    font-size: var(--slds-g-font-size-base, 13px);
+    font-weight: var(--slds-g-font-weight-6, 590);
+    /* 18px label row height per design spec; no SLDS hook maps to this line-height */
+    line-height: 18px;
+    min-height: 18px;
+    /* 2px label-to-value gap per design spec; no SLDS hook maps to this margin */
+    margin-bottom: 2px;
+}
+
+.opp-detail__label_has-icon {
+    display: flex;
+    align-items: center;
+    gap: var(--slds-g-spacing-1, 4px);
+}
+
+/* Suppress visual noise on blank label rows */
+.opp-detail__label_empty {
+    color: transparent;
+}
+
+.opp-detail__static {
+    font-size: var(--slds-g-font-size-base, 13px);
+    min-height: var(--slds-g-sizing-7, 24px);
+    /* 24px line-height matches the value row height; no SLDS hook maps to this line-height */
+    line-height: 24px;
+    /* 1px border weight; no SLDS sizing hook maps to border widths */
+    border-bottom: 1px solid var(--slds-g-color-border-1, #c9c9c9);
+}
+
+/* Keep the bottom divider on blank rows without showing filler text */
+.opp-detail__static_empty {
+    color: transparent;
+}
+
+/* ============================================================
+   Activity timeline spacing
+   ============================================================ */
+
+.slds-timeline__item_expandable .slds-timeline__figure {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--slds-g-spacing-1, 4px);
+}

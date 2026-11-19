@@ -3,19 +3,17 @@
     </lightning-modal-header>
 
     <lightning-modal-body>
+        <div class="tcm-body-content">
 
         <!-- Product-context notification (amber / warning) -->
-        <div class="tcm-notification slds-scoped-notification slds-media slds-media_center slds-theme_warning" role="status">
-            <div class="slds-media__figure slds-media__figure_fixed-width">
-                <lightning-icon
-                    icon-name="utility:warning"
-                    size="x-small"
-                    alternative-text="Note">
-                </lightning-icon>
-            </div>
-            <div class="slds-media__body">
-                <p class="tcm-notification__text">Opened by: Add to Quote — {productName}</p>
-            </div>
+        <div class="tcm-notification" role="status">
+            <lightning-icon
+                icon-name="utility:warning"
+                size="x-small"
+                alternative-text="Warning"
+                class="tcm-notification__icon">
+            </lightning-icon>
+            <p class="tcm-notification__text">Opened by: Add to Quote — {productName}</p>
         </div>
 
         <!-- Guidance text — visible only before a mode is chosen -->
@@ -134,6 +132,7 @@
             </div>
         </template>
 
+        </div>
     </lightning-modal-body>
 
     <lightning-modal-footer>

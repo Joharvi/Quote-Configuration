@@ -16,6 +16,9 @@ src/build/generated/
 # Claude (local-only)
 .claude/settings.local.json
 
+# SLDS icons (available via @salesforce-ux/design-system in node_modules)
+salesforce-lightning-design-system-icons/
+
 # OS
 .DS_Store
 

@@ -196,7 +196,6 @@
     align-items: center;
     gap: var(--slds-g-spacing-2, 0.5rem);
     padding: var(--slds-g-spacing-3, 0.75rem) var(--slds-g-spacing-4, 1rem);
-    border-bottom: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-border-1, #c9c9c9);
     flex-shrink: 0;
 }
 
@@ -214,7 +213,6 @@
     display: flex;
     gap: var(--slds-g-spacing-3, 0.75rem);
     padding: var(--slds-g-spacing-3, 0.75rem) var(--slds-g-spacing-4, 1rem);
-    border-bottom: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-border-1, #c9c9c9);
     flex-shrink: 0;
 }
 
@@ -281,7 +279,6 @@
     align-items: center;
     gap: var(--slds-g-spacing-3, 0.75rem);
     padding: var(--slds-g-spacing-2, 0.5rem) var(--slds-g-spacing-4, 1rem);
-    border-top: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-border-1, #c9c9c9);
     flex-shrink: 0;
     flex-wrap: wrap;
 }
@@ -348,7 +345,6 @@
     justify-content: space-between;
     gap: var(--slds-g-spacing-2, 0.5rem);
     padding: var(--slds-g-spacing-3, 0.75rem) var(--slds-g-spacing-4, 1rem);
-    border-bottom: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-border-1, #c9c9c9);
     flex-wrap: wrap;
     flex-shrink: 0;
 }
@@ -426,11 +422,29 @@
 }
 
 .qc-ps-col-actions {
-    /* ~120px for three icon buttons; no SLDS sizing hook maps to this value */
-    width: 120px;
+    width: var(--slds-g-sizing-12, 5rem);
+}
+
+.qc-ps-tenant-input {
+    display: block;
 }
 
 .qc-ps-row-actions {
     display: flex;
     gap: var(--slds-g-spacing-1, 0.25rem);
+}
+
+/* ============================================================
+   Tenant Configuration step (qc-tc-*)
+   ============================================================ */
+
+/* Full-width single panel (overrides the two-column flex-basis from qc-ps-panel) */
+.qc-tc-panel {
+    flex-basis: auto;
+}
+
+/* Empty state heading/sub text colors */
+.qc-tc-empty-text p {
+    color: var(--slds-g-color-on-surface-1, #5c5c5c);
+    margin: 0;
 }

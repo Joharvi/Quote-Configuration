@@ -1,0 +1,45 @@
+<template>
+    <!-- Collapsed trigger pill -->
+    <button class={triggerClass} type="button" onclick={handleToggle} aria-expanded={isExpandedStr} aria-label="Open prototype flow navigator">
+        <span class="fn__trigger-label-row">
+            <lightning-icon icon-name="utility:flow" size="x-small" alternative-text="Prototype flows"></lightning-icon>
+            <span class="fn__trigger-label">{activeFlow.label}</span>
+        </span>
+        <span class="fn__trigger-subtitle" aria-hidden="true">{activeFlow.subtitle}</span>
+    </button>
+
+    <!-- Left drawer panel -->
+    <div class={panelClass}>
+        <div class="fn__panel-header">
+            <div class="fn__panel-header-top">
+                <h2 class="fn__panel-title">Prototype Flows</h2>
+                <lightning-button-icon
+                    icon-name="utility:close"
+                    variant="bare"
+                    size="small"
+                    alternative-text="Close flow navigator"
+                    onclick={handleToggle}>
+                </lightning-button-icon>
+            </div>
+            <p class="fn__panel-description">Select a flow variant to navigate the prototype from its entry page. Each version explores a different interaction approach.</p>
+        </div>
+        <ul class="fn__flow-list">
+            <template for:each={flows} for:item="flow">
+                <li key={flow.id}
+                    class={flow.itemClass}
+                    data-id={flow.id}
+                    onclick={handleFlowSelect}
+                    tabindex="0"
+                    onkeydown={handleFlowKeydown}>
+                    <div class="fn__flow-name">{flow.label}</div>
+                    <div class="fn__flow-subtitle">{flow.subtitle}</div>
+                </li>
+            </template>
+        </ul>
+    </div>
+
+    <!-- Click-away backdrop -->
+    <template lwc:if={isExpanded}>
+        <div class="fn__backdrop" onclick={handleToggle} aria-hidden="true"></div>
+    </template>
+</template>

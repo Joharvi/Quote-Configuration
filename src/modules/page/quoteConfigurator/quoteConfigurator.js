@@ -1,13 +1,26 @@
 import { LightningElement, track } from 'lwc';
 import { navigate } from '../../../router';
+import { closeQuoteSession } from '../../data/quoteSession/quoteSession';
+import TenantConfigModal from 'ui/tenantConfigModal';
+import { getActiveFlowId } from '../../data/flowConfig/flowConfig';
 
-const STEPS = [
-    { key: 'quote-header',        label: 'Quote Header' },
-    { key: 'product-selection',   label: 'Product Selection' },
-    { key: 'pricing',             label: 'Pricing' },
-    { key: 'billing-information', label: 'Billing Information' },
-    { key: 'special-terms',       label: 'Special Terms' },
-    { key: 'quote-review',        label: 'Quote Review' },
+const STEPS_A = [
+    { key: 'quote-header',          label: 'Quote Header' },
+    { key: 'product-selection',     label: 'Product Selection' },
+    { key: 'pricing',               label: 'Pricing' },
+    { key: 'billing-information',   label: 'Billing Information' },
+    { key: 'special-terms',         label: 'Special Terms' },
+    { key: 'quote-review',          label: 'Quote Review' },
+];
+
+const STEPS_B = [
+    { key: 'quote-header',          label: 'Quote Header' },
+    { key: 'product-selection',     label: 'Product Selection' },
+    { key: 'tenant-configuration',  label: 'Tenant Configuration' },
+    { key: 'pricing',               label: 'Pricing' },
+    { key: 'billing-information',   label: 'Billing Information' },
+    { key: 'special-terms',         label: 'Special Terms' },
+    { key: 'quote-review',          label: 'Quote Review' },
 ];
 
 const PS_CATALOG = [
@@ -54,7 +67,8 @@ export default class QuoteConfigurator extends LightningElement {
 
     /* ---- Product Selection state ---- */
 
-    @track psProducts = [];
+    @track _psProducts = [];
+    @track psTenantAssignments = {};
 
     psSearch = '';
     psCategory = 'all';
@@ -63,13 +77,18 @@ export default class QuoteConfigurator extends LightningElement {
     psPageSizeOptions     = [{ label: '10', value: '10' }, { label: '20', value: '20' }, { label: '50', value: '50' }];
     psTenantFilterOptions = [{ label: 'All Tenants', value: '' }];
     psCartOptions         = [{ label: 'Default Cart', value: 'default' }];
-    psTenantStatusOptions = [{ label: 'Not configured', value: 'Not configured' }];
+
+    /* ---- Steps ---- */
+
+    get _steps() {
+        return getActiveFlowId() === 'version-b' ? STEPS_B : STEPS_A;
+    }
 
     /* ---- Path ---- */
 
     get pathSteps() {
-        const last = STEPS.length - 1;
-        return STEPS.map((step, i) => {
+        const last = this._steps.length - 1;
+        return this._steps.map((step, i) => {
             const isComplete = i < this._currentStepIndex;
             const isCurrent  = i === this._currentStepIndex;
 
@@ -106,8 +125,12 @@ export default class QuoteConfigurator extends LightningElement {
         return this._currentStepIndex === 1;
     }
 
+    get isStepTenantConfiguration() {
+        return this._currentStepIndex === 2 && getActiveFlowId() === 'version-b';
+    }
+
     get currentStepLabel() {
-        return STEPS[this._currentStepIndex]?.label ?? '';
+        return this._steps[this._currentStepIndex]?.label ?? '';
     }
 
     /* ---- Action bar ---- */
@@ -117,15 +140,26 @@ export default class QuoteConfigurator extends LightningElement {
     }
 
     get prevStepLabel() {
-        return STEPS[this._currentStepIndex - 1]?.label ?? '';
+        return this._steps[this._currentStepIndex - 1]?.label ?? '';
     }
 
     get nextButtonLabel() {
-        const next = STEPS[this._currentStepIndex + 1];
+        const next = this._steps[this._currentStepIndex + 1];
         return next ? next.label : 'Save Quote';
     }
 
     /* ---- Product Selection: computed ---- */
+
+    get psProducts() {
+        return this._psProducts.map(p => {
+            const assignment = this.psTenantAssignments[p.id];
+            const isAssigned = !!assignment;
+            const tenantDisplay = isAssigned
+                ? `${assignment.environment} · ${assignment.orgDisplayId}`
+                : 'Not configured';
+            return { ...p, isAssigned, showWarning: !isAssigned, tenantDisplay };
+        });
+    }
 
     get psCatalogItems() {
         const term = this.psSearch ? this.psSearch.toLowerCase() : '';
@@ -135,7 +169,7 @@ export default class QuoteConfigurator extends LightningElement {
     }
 
     get psHasProducts() {
-        return this.psProducts.length > 0;
+        return this._psProducts.length > 0;
     }
 
     get psShowEmpty() {
@@ -143,19 +177,26 @@ export default class QuoteConfigurator extends LightningElement {
     }
 
     get psCountLabel() {
-        return `Selected Products (${this.psProducts.length})`;
+        return `Selected Products (${this._psProducts.length})`;
     }
 
     get psCatalogCount() {
         return `${this.psCatalogItems.length} Product(s)`;
     }
 
+    get psUnassigned() {
+        return this._psProducts.filter(p => !this.psTenantAssignments[p.id]);
+    }
+
+    get psHasUnassigned() {
+        return this.psUnassigned.length > 0;
+    }
+
     get psIssuesList() {
-        if (!this.psHasProducts) return [];
-        return this.psProducts.map(p => ({
+        return this.psUnassigned.map(p => ({
             id: p.id,
             severity: 'warning',
-            message: `Configure Tenant | ${p.name} (NBA Commercial Offering)`,
+            message: `Configure Tenant | ${p.name}`,
             action: { label: 'Configure Tenant', event: 'configuretenant' },
         }));
     }
@@ -163,6 +204,7 @@ export default class QuoteConfigurator extends LightningElement {
     /* ---- Handlers: step navigation ---- */
 
     handleCancel() {
+        closeQuoteSession();
         navigate('/opportunities');
     }
 
@@ -173,7 +215,7 @@ export default class QuoteConfigurator extends LightningElement {
     }
 
     handleNext() {
-        if (this._currentStepIndex < STEPS.length - 1) {
+        if (this._currentStepIndex < this._steps.length - 1) {
             this._currentStepIndex += 1;
         }
     }
@@ -191,12 +233,11 @@ export default class QuoteConfigurator extends LightningElement {
     psHandleSelect(event) {
         const id = event.currentTarget.dataset.id;
         const item = PS_CATALOG.find(p => p.id === id);
-        if (!item || this.psProducts.some(p => p.id === id)) return;
-        this.psProducts = [
-            ...this.psProducts,
-            { id: item.id, name: item.name, price: item.price, quantity: 1, tenant: 'Not configured' },
+        if (!item || this._psProducts.some(p => p.id === id)) return;
+        this._psProducts = [
+            ...this._psProducts,
+            { id: item.id, name: item.name, price: item.price, quantity: 1 },
         ];
-        this.psSearch = item.name;
     }
 
     psHandleKeydown(event) {
@@ -209,7 +250,7 @@ export default class QuoteConfigurator extends LightningElement {
     psHandleQtyChange(event) {
         const id = event.currentTarget.dataset.id;
         const qty = parseInt(event.detail.value, 10);
-        this.psProducts = this.psProducts.map(p =>
+        this._psProducts = this._psProducts.map(p =>
             p.id === id
                 ? { ...p, quantity: Number.isFinite(qty) && qty >= 1 ? qty : 1 }
                 : p
@@ -218,19 +259,45 @@ export default class QuoteConfigurator extends LightningElement {
 
     psHandleDelete(event) {
         const id = event.currentTarget.dataset.id;
-        this.psProducts = this.psProducts.filter(p => p.id !== id);
-        if (!this.psProducts.length) {
-            this.psSearch = '';
+        this._psProducts = this._psProducts.filter(p => p.id !== id);
+        const updated = { ...this.psTenantAssignments };
+        delete updated[id];
+        this.psTenantAssignments = updated;
+    }
+
+    /* ---- Tenant configuration ---- */
+
+    async psHandleConfigureTenant() {
+        const target = this.psUnassigned[0] || this._psProducts[0];
+        if (!target) return;
+        await this._openPsTenantModal(target.id, target.name);
+    }
+
+    async psHandleEditTenant(event) {
+        const id = event.currentTarget.dataset.id;
+        const product = this._psProducts.find(p => p.id === id);
+        if (!product) return;
+        await this._openPsTenantModal(id, product.name);
+    }
+
+    async _openPsTenantModal(productId, productName) {
+        const existing = this.psTenantAssignments[productId] || null;
+        const result = await TenantConfigModal.open({
+            size: 'large',
+            label: 'Tenant & Fulfillment Configuration',
+            productName,
+            initialAssignment: existing,
+        });
+        if (result) {
+            this.psTenantAssignments = { ...this.psTenantAssignments, [productId]: result };
         }
     }
 
-    /* ---- Integration stubs (destinations not established) ---- */
+    get psTcShowSuggested() {
+        return false;
+    }
 
-    psHandleConfigureTenant() {}
+    /* ---- Stubs ---- */
 
     psHandleSuggestedProducts() {}
-
-    psHandleAddBundle() {}
-
-    psHandleEditBundle() {}
 }

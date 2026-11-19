@@ -24,8 +24,8 @@ export const apps = [
     variant: 'standard',
     icon: 'utility:home',
     pathPrefix: '/app',
-    defaultPath: '/app/quote',
-    pages: ['quoteConfigurator', 'accounts', 'opportunities', 'leads', 'reports', 'dashboards', 'productBundles', 'home', 'icons', 'contacts'],
+    defaultPath: '/app/opportunities',
+    pages: ['accounts', 'opportunities', 'leads', 'reports', 'dashboards', 'productBundles', 'home', 'icons', 'contacts'],
   },
   {
     id: 'console',

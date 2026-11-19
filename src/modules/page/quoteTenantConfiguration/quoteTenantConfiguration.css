@@ -1,0 +1,241 @@
+:host {
+    display: block;
+}
+
+.qc-page {
+    min-height: 100%;
+    background-color: var(--slds-g-color-surface-container-2, #f3f3f3);
+    display: flex;
+    flex-direction: column;
+}
+
+.qc-header {
+    background-color: var(--slds-g-color-neutral-base-100, #fff);
+    min-height: 85px;
+    padding: var(--slds-g-spacing-4, 1rem);
+    display: flex;
+    align-items: center;
+    border-bottom: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-border-1, #c9c9c9);
+}
+
+.qc-header__title {
+    font-size: var(--slds-g-font-scale-5, 1.75rem);
+    font-weight: var(--slds-g-font-weight-7, 700);
+    line-height: var(--slds-g-font-line-height-2, 1.25);
+    color: var(--slds-g-color-on-surface-2, #2e2e2e);
+}
+
+.qc-header__meta {
+    font-size: var(--slds-g-font-size-base, 13px);
+    color: var(--slds-g-color-on-surface-2, #2e2e2e);
+    margin-top: var(--slds-g-spacing-1, 0.25rem);
+}
+
+.qc-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* ============================================================
+   Progress Path — mirrors quoteProductSelection
+   ============================================================ */
+
+.qc-path {
+    flex-shrink: 0;
+    background-color: var(--slds-g-color-neutral-base-100, #fff);
+    border-bottom: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-border-1, #c9c9c9);
+}
+
+.qc-path__scroller-container {
+    padding: 0;
+}
+
+.qc-path__scroller {
+    overflow: hidden;
+}
+
+.qc-path__scroller-inner {
+    overflow: hidden;
+}
+
+.qc-path__nav {
+    display: flex;
+    width: 100%;
+}
+
+.qc-path__item {
+    flex: 1;
+}
+
+.qc-path__item_final .qc-path__link_final {
+    border-radius: 0;
+}
+
+/* ============================================================
+   Workspace: single full-width panel
+   ============================================================ */
+
+.qtc-workspace {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: var(--slds-g-spacing-4, 1rem);
+    gap: var(--slds-g-spacing-4, 1rem);
+    overflow: hidden;
+}
+
+.qtc-panel {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--slds-g-color-neutral-base-100, #fff);
+    border: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-border-1, #c9c9c9);
+    border-radius: var(--slds-g-radius-border-2, 0.25rem);
+    overflow: hidden;
+    flex: 1;
+}
+
+/* ============================================================
+   Selected products panel: header
+   ============================================================ */
+
+.qc-sel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--slds-g-spacing-2, 0.5rem);
+    padding: var(--slds-g-spacing-3, 0.75rem) var(--slds-g-spacing-4, 1rem);
+    border-bottom: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-border-1, #c9c9c9);
+    flex-wrap: wrap;
+}
+
+.qc-sel-header__left {
+    display: flex;
+    align-items: center;
+    gap: var(--slds-g-spacing-2, 0.5rem);
+}
+
+.qc-panel__title {
+    font-weight: var(--slds-g-font-weight-7, 700);
+    color: var(--slds-g-color-on-surface-1, #1d1d1d);
+    margin: 0;
+}
+
+/* ============================================================
+   Selected products panel: body + table
+   ============================================================ */
+
+.qc-sel-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.qc-sel-table-wrap {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.qc-sel-table {
+    font-size: var(--slds-g-font-size-base, 13px);
+}
+
+.qc-table {
+    font-size: var(--slds-g-font-size-base, 13px);
+}
+
+.qc-sel-product-cell {
+    gap: var(--slds-g-spacing-2, 0.5rem);
+}
+
+.qc-warning-icon {
+    color: var(--slds-g-color-warning-1, #8c4b02);
+}
+
+.qc-col-qty {
+    /* ~90px for quantity input; no SLDS sizing hook maps to this value */
+    width: 90px;
+}
+
+.qc-col-actions {
+    width: var(--slds-g-sizing-12, 5rem);
+}
+
+.qc-row-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--slds-g-spacing-2, 0.5rem);
+    --slds-c-button-radius-border: var(--slds-g-radius-border-circle, 9999px);
+}
+
+.qc-product-link {
+    color: var(--slds-g-color-brand-base-50, #0176d3);
+    text-decoration: none;
+}
+
+.qc-product-link_wrap {
+    white-space: normal;
+    word-break: break-word;
+}
+
+.qc-qty-input {
+    max-width: 80px;
+}
+
+.qc-tenant-input {
+    min-width: 0;
+}
+
+/* ============================================================
+   Empty state
+   ============================================================ */
+
+.qtc-empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--slds-g-spacing-4, 1rem);
+    padding: var(--slds-g-spacing-6, 2rem);
+}
+
+.qtc-empty-state__icon {
+    color: var(--slds-g-color-on-surface-3, #5c5c5c);
+}
+
+.qtc-empty-state__text {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: var(--slds-g-spacing-2, 0.5rem);
+}
+
+.qtc-empty-state__text p {
+    margin: 0;
+}
+
+.qtc-empty-state__heading {
+    color: var(--slds-g-color-on-surface-1, #1d1d1d);
+}
+
+.qtc-empty-state__sub {
+    color: var(--slds-g-color-on-surface-3, #5c5c5c);
+    font-size: var(--slds-g-font-size-base, 13px);
+}
+
+/* ============================================================
+   Step navigation footer
+   ============================================================ */
+
+.qc-step-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--slds-g-spacing-4, 1rem);
+    background-color: var(--slds-g-color-neutral-base-100, #fff);
+    border-top: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-border-1, #c9c9c9);
+    flex-shrink: 0;
+}

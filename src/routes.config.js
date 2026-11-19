@@ -96,6 +96,12 @@ export const routes = [
     navHighlight: 'quoteConfigurator',
   },
   {
+    path: '/quote/tenant-configuration',
+    component: 'page-quote-tenant-configuration',
+    title: 'Quote Configurator — Tenant Configuration',
+    navHighlight: 'quoteConfigurator',
+  },
+  {
     path: '/',
     component: 'page-builder',
     title: 'Builder',

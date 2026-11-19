@@ -1,0 +1,655 @@
+<template>
+    <div class="slds-p-horizontal_medium slds-p-top_medium slds-p-bottom_large">
+
+        <!-- PAGE HEADER -->
+        <ui-page-header
+            variant="record-home"
+            icon-name="standard:opportunity"
+            object-label="Opportunity"
+            title="Acme Corp NBA Core Edition"
+            fields={fields}
+            breadcrumbs={breadcrumbs}>
+            <div slot="actions">
+                <div class="slds-page-header__controls">
+                    <div class="slds-page-header__control">
+                        <lightning-button
+                            label="Follow"
+                            icon-name="utility:add"
+                            icon-position="left"
+                            variant="neutral">
+                        </lightning-button>
+                    </div>
+                    <div class="slds-page-header__control">
+                        <lightning-button-group>
+                            <lightning-button label="Edit" variant="neutral"></lightning-button>
+                            <lightning-button label="Success Request" variant="neutral"></lightning-button>
+                            <lightning-button label="Clone (w/Products)" variant="neutral"></lightning-button>
+                            <lightning-button label="Create PSA" variant="neutral"></lightning-button>
+                            <lightning-button label="Create Quote" variant="neutral" onclick={handleCreateQuote}></lightning-button>
+                            <lightning-button-icon
+                                icon-name="utility:down"
+                                variant="border-filled"
+                                alternative-text="More Actions"
+                                title="More Actions">
+                            </lightning-button-icon>
+                        </lightning-button-group>
+                    </div>
+                </div>
+            </div>
+        </ui-page-header>
+
+        <!-- PATH SECTION -->
+        <div class="slds-m-top_medium">
+            <!-- Path track -->
+            <div class="opp-path-wrap">
+                <!-- Collapse/expand button -->
+                <div class="opp-path__collapse-btn">
+                    <lightning-button-icon
+                        icon-name="utility:chevronup"
+                        size="x-small"
+                        variant="border-filled"
+                        alternative-text="Collapse path"
+                        title="Collapse path">
+                    </lightning-button-icon>
+                </div>
+
+                <!-- Steps -->
+                <div class="opp-path__steps">
+                    <!-- Step 1 — active/current -->
+                    <div class="opp-path__step opp-path__step_active">
+                        <div class="opp-path__stage opp-path__stage_active">
+                            <span class="opp-path__label opp-path__label_active">01 - Identifying an...</span>
+                        </div>
+                        <img class="opp-path__arrow-right" src="/images/path-arrow-right-active.svg" alt="" aria-hidden="true" />
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="opp-path__step opp-path__step_inactive">
+                        <img class="opp-path__arrow-left" src="/images/path-arrow-left.svg" alt="" aria-hidden="true" />
+                        <div class="opp-path__stage opp-path__stage_inactive">
+                            <span class="opp-path__label opp-path__label_inactive">02 - Determining Pr...</span>
+                        </div>
+                        <img class="opp-path__arrow-right" src="/images/path-arrow-right-inactive.svg" alt="" aria-hidden="true" />
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="opp-path__step opp-path__step_inactive">
+                        <img class="opp-path__arrow-left" src="/images/path-arrow-left.svg" alt="" aria-hidden="true" />
+                        <div class="opp-path__stage opp-path__stage_inactive">
+                            <span class="opp-path__label opp-path__label_inactive">03 - Validating Ben...</span>
+                        </div>
+                        <img class="opp-path__arrow-right" src="/images/path-arrow-right-inactive.svg" alt="" aria-hidden="true" />
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="opp-path__step opp-path__step_inactive">
+                        <img class="opp-path__arrow-left" src="/images/path-arrow-left.svg" alt="" aria-hidden="true" />
+                        <div class="opp-path__stage opp-path__stage_inactive">
+                            <span class="opp-path__label opp-path__label_inactive">04 - Confirming Val...</span>
+                        </div>
+                        <img class="opp-path__arrow-right" src="/images/path-arrow-right-inactive.svg" alt="" aria-hidden="true" />
+                    </div>
+
+                    <!-- Step 5 -->
+                    <div class="opp-path__step opp-path__step_inactive">
+                        <img class="opp-path__arrow-left" src="/images/path-arrow-left.svg" alt="" aria-hidden="true" />
+                        <div class="opp-path__stage opp-path__stage_inactive">
+                            <span class="opp-path__label opp-path__label_inactive">05 - Negotiating $$...</span>
+                        </div>
+                        <img class="opp-path__arrow-right" src="/images/path-arrow-right-inactive.svg" alt="" aria-hidden="true" />
+                    </div>
+
+                    <!-- Step 6 -->
+                    <div class="opp-path__step opp-path__step_inactive">
+                        <img class="opp-path__arrow-left" src="/images/path-arrow-left.svg" alt="" aria-hidden="true" />
+                        <div class="opp-path__stage opp-path__stage_inactive">
+                            <span class="opp-path__label opp-path__label_inactive">06 - Finalizing Clos...</span>
+                        </div>
+                        <img class="opp-path__arrow-right" src="/images/path-arrow-right-inactive.svg" alt="" aria-hidden="true" />
+                    </div>
+
+                    <!-- Step 7 -->
+                    <div class="opp-path__step opp-path__step_inactive">
+                        <img class="opp-path__arrow-left" src="/images/path-arrow-left.svg" alt="" aria-hidden="true" />
+                        <div class="opp-path__stage opp-path__stage_inactive">
+                            <span class="opp-path__label opp-path__label_inactive">07 - Pending</span>
+                        </div>
+                        <img class="opp-path__arrow-right" src="/images/path-arrow-right-inactive.svg" alt="" aria-hidden="true" />
+                    </div>
+
+                    <!-- Step 8 — final (Closed) -->
+                    <div class="opp-path__step opp-path__step_last">
+                        <img class="opp-path__arrow-left" src="/images/path-arrow-left.svg" alt="" aria-hidden="true" />
+                        <div class="opp-path__stage opp-path__stage_inactive opp-path__stage_last">
+                            <span class="opp-path__label opp-path__label_inactive">Closed</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mark Stage as Complete button -->
+                <div class="opp-path__action">
+                    <lightning-button
+                        variant="brand"
+                        label="Mark Stage as Complete">
+                    </lightning-button>
+                </div>
+            </div>
+
+            <!-- Key Fields & Guidance for Success coaching card -->
+            <div class="opp-coaching-card slds-m-top_x-small">
+                <div class="slds-card slds-card_boundary opp-coaching-card__surface">
+                    <div class="slds-card__body slds-card__body_inner">
+                        <div class="slds-grid slds-gutters_x-large slds-p-around_medium">
+
+                            <!-- Left: Key Fields -->
+                            <div class="slds-col">
+                                <div class="slds-grid slds-grid_align-spread slds-m-bottom_small">
+                                    <span class="slds-text-body_regular slds-text-color_default opp-label-semibold">Key Fields</span>
+                                    <a href="javascript:void(0)" class="slds-text-link">Edit</a>
+                                </div>
+                                <lightning-input
+                                    label="Next Steps"
+                                    value=""
+                                    read-only
+                                    variant="label-stacked">
+                                </lightning-input>
+                            </div>
+
+                            <!-- Right: Guidance for Success -->
+                            <div class="slds-col">
+                                <p class="slds-text-body_regular opp-label-semibold slds-m-bottom_small">Guidance for Success</p>
+                                <p class="slds-text-body_regular opp-label-semibold slds-m-bottom_small">Activities</p>
+                                <p class="slds-m-bottom_x-small">
+                                    <a href="javascript:void(0)" class="slds-text-link">C360 Methodology Step: Develop Initial POV</a>
+                                </p>
+                                <p class="slds-text-body_small slds-text-color_weak slds-m-bottom_small">
+                                    An initial Point of View is developed and refined with consumer guidance.
+                                </p>
+                                <p class="slds-text-body_small opp-label-semibold slds-m-bottom_x-small">Activities:</p>
+                                <p class="slds-text-body_small slds-text-color_weak">
+                                    Develop and Share Initial Point-of-View (POV)<br/>
+                                    Create/Import Contact Relationship Map
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- WRAP: Details + Activity two-column grid -->
+        <div class="slds-grid slds-gutters slds-m-top_medium slds-wrap">
+
+            <!-- LEFT CARD: Details, Related, Team, Methodology, Related Oppties -->
+            <div class="slds-col slds-size_8-of-12">
+                <div class="slds-card slds-card_boundary">
+                    <div class="slds-card__body">
+                        <lightning-tabset variant="default">
+                            <lightning-tab label="Details">
+                                <div class="slds-p-horizontal_small">
+                                    <lightning-accordion
+                                        allow-multiple-sections-open
+                                        active-section-name={activeSections}>
+
+                                        <!-- Opportunity Information -->
+                                        <!-- Using SLDS view-mode field blueprint; lightning-input read-only
+                                             cannot express links, inline edit icons, or label help icons -->
+                                        <lightning-accordion-section
+                                            name="oppInfo"
+                                            label="Opportunity Information">
+                                            <div class="slds-p-vertical_medium">
+                                                <!-- Row 1 -->
+                                                <div class="slds-grid slds-gutters_small slds-m-bottom_medium">
+                                                    <div class="slds-col slds-size_1-of-2">
+                                                        <div class="slds-form-element slds-form-element_stacked">
+                                                            <span class="slds-form-element__label opp-detail__label">Opportunity Owner</span>
+                                                            <div class="slds-form-element__control">
+                                                                <div class="slds-form-element__static opp-detail__static">
+                                                                    <a href="#">Steven Fuller</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-col slds-size_1-of-2">
+                                                        <div class="slds-form-element slds-form-element_stacked">
+                                                            <span class="slds-form-element__label opp-detail__label">Amount</span>
+                                                            <div class="slds-form-element__control">
+                                                                <div class="slds-form-element__static opp-detail__static">
+                                                                    USD 100,000.00
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- Row 2 -->
+                                                <div class="slds-grid slds-gutters_small">
+                                                    <div class="slds-col slds-size_1-of-2">
+                                                        <div class="slds-form-element slds-form-element_stacked">
+                                                            <span class="slds-form-element__label opp-detail__label">Oportunity Name</span>
+                                                            <div class="slds-form-element__control">
+                                                                <div class="slds-form-element__static opp-detail__static slds-grid slds-grid_vertical-align-center">
+                                                                    <span class="slds-grow">Acme Corp NBA Core Edition</span>
+                                                                    <lightning-button-icon
+                                                                        icon-name="utility:edit"
+                                                                        variant="bare"
+                                                                        size="x-small"
+                                                                        alternative-text="Edit Oportunity Name">
+                                                                    </lightning-button-icon>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-col slds-size_1-of-2">
+                                                        <div class="slds-form-element slds-form-element_stacked">
+                                                            <div class="slds-form-element__label opp-detail__label opp-detail__label_has-icon">
+                                                                <span>OTV</span>
+                                                                <lightning-button-icon
+                                                                    icon-name="utility:info"
+                                                                    variant="bare"
+                                                                    size="x-small"
+                                                                    alternative-text="OTV information">
+                                                                </lightning-button-icon>
+                                                            </div>
+                                                            <div class="slds-form-element__control">
+                                                                <div class="slds-form-element__static opp-detail__static slds-grid slds-grid_vertical-align-center">
+                                                                    <span class="slds-grow">USD 0.00</span>
+                                                                    <lightning-button-icon
+                                                                        icon-name="utility:edit"
+                                                                        variant="bare"
+                                                                        size="x-small"
+                                                                        alternative-text="Edit OTV">
+                                                                    </lightning-button-icon>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </lightning-accordion-section>
+
+                                        <!-- Deal Review -->
+                                        <lightning-accordion-section
+                                            name="dealReview"
+                                            label="Deal Review">
+                                            <div class="slds-p-vertical_medium">
+                                                <!-- Row 1 -->
+                                                <div class="slds-grid slds-gutters_small slds-m-bottom_medium">
+                                                    <div class="slds-col slds-size_1-of-2">
+                                                        <div class="slds-form-element slds-form-element_stacked">
+                                                            <span class="slds-form-element__label opp-detail__label">Compelling Event</span>
+                                                            <div class="slds-form-element__control">
+                                                                <div class="slds-form-element__static opp-detail__static">
+                                                                    Value
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-col slds-size_1-of-2">
+                                                        <div class="slds-form-element slds-form-element_stacked">
+                                                            <span class="slds-form-element__label opp-detail__label">Decision Making Process</span>
+                                                            <div class="slds-form-element__control">
+                                                                <div class="slds-form-element__static opp-detail__static slds-grid slds-grid_vertical-align-center">
+                                                                    <span class="slds-grow">Value</span>
+                                                                    <lightning-button-icon
+                                                                        icon-name="utility:edit"
+                                                                        variant="bare"
+                                                                        size="x-small"
+                                                                        alternative-text="Edit Decision Making Process">
+                                                                    </lightning-button-icon>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- Row 2 -->
+                                                <div class="slds-grid slds-gutters_small">
+                                                    <div class="slds-col slds-size_1-of-2">
+                                                        <div class="slds-form-element slds-form-element_stacked">
+                                                            <span class="slds-form-element__label opp-detail__label">Budget Details</span>
+                                                            <div class="slds-form-element__control">
+                                                                <div class="slds-form-element__static opp-detail__static">
+                                                                    Value
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-col slds-size_1-of-2">
+                                                        <div class="slds-form-element slds-form-element_stacked">
+                                                            <span class="slds-form-element__label opp-detail__label">Unique Business Value</span>
+                                                            <div class="slds-form-element__control">
+                                                                <div class="slds-form-element__static opp-detail__static slds-grid slds-grid_vertical-align-center">
+                                                                    <span class="slds-grow">Value</span>
+                                                                    <lightning-button-icon
+                                                                        icon-name="utility:edit"
+                                                                        variant="bare"
+                                                                        size="x-small"
+                                                                        alternative-text="Edit Unique Business Value">
+                                                                    </lightning-button-icon>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </lightning-accordion-section>
+
+                                        <!-- System Information -->
+                                        <lightning-accordion-section
+                                            name="sysInfo"
+                                            label="System Information">
+                                            <div class="slds-p-vertical_medium">
+                                                <!-- Row 1 -->
+                                                <div class="slds-grid slds-gutters_small slds-m-bottom_medium">
+                                                    <div class="slds-col slds-size_1-of-2">
+                                                        <div class="slds-form-element slds-form-element_stacked">
+                                                            <span class="slds-form-element__label opp-detail__label">Created By</span>
+                                                            <div class="slds-form-element__control">
+                                                                <div class="slds-form-element__static opp-detail__static">
+                                                                    <a href="#">Dsnyder@email.com</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-col slds-size_1-of-2">
+                                                        <div class="slds-form-element slds-form-element_stacked">
+                                                            <span class="slds-form-element__label opp-detail__label">Last Modified By</span>
+                                                            <div class="slds-form-element__control">
+                                                                <div class="slds-form-element__static opp-detail__static">
+                                                                    <a href="#">Dsnyder@email.com</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- Row 2: blank fields — preserve space and bottom divider -->
+                                                <div class="slds-grid slds-gutters_small">
+                                                    <div class="slds-col slds-size_1-of-2">
+                                                        <div class="slds-form-element slds-form-element_stacked">
+                                                            <span class="slds-form-element__label opp-detail__label opp-detail__label_empty">&nbsp;</span>
+                                                            <div class="slds-form-element__control">
+                                                                <div class="slds-form-element__static opp-detail__static opp-detail__static_empty">&nbsp;</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-col slds-size_1-of-2">
+                                                        <div class="slds-form-element slds-form-element_stacked">
+                                                            <span class="slds-form-element__label opp-detail__label opp-detail__label_empty">&nbsp;</span>
+                                                            <div class="slds-form-element__control">
+                                                                <div class="slds-form-element__static opp-detail__static opp-detail__static_empty">&nbsp;</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </lightning-accordion-section>
+
+                                    </lightning-accordion>
+                                </div>
+                            </lightning-tab>
+                            <lightning-tab label="Related"></lightning-tab>
+                            <lightning-tab label="Team"></lightning-tab>
+                            <lightning-tab label="Methodology"></lightning-tab>
+                            <lightning-tab label="Related Oppties"></lightning-tab>
+                        </lightning-tabset>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT CARD: Activity, Chatter, Quip -->
+            <div class="slds-col slds-size_4-of-12">
+                <div class="slds-card slds-card_boundary">
+                    <div class="slds-card__body">
+                        <lightning-tabset variant="default">
+                            <lightning-tab label="Activity">
+                                <div class="slds-p-horizontal_medium slds-p-top_small">
+
+                                    <!-- Split button groups: Event + Email -->
+                                    <div class="slds-grid opp-activity__btn-groups slds-m-bottom_small">
+                                        <lightning-button-group>
+                                            <lightning-button-icon
+                                                icon-name="standard:event"
+                                                variant="border-filled"
+                                                alternative-text="New Event"
+                                                title="New Event">
+                                            </lightning-button-icon>
+                                            <lightning-button-icon
+                                                icon-name="utility:down"
+                                                variant="border-filled"
+                                                alternative-text="More event actions"
+                                                title="More event actions">
+                                            </lightning-button-icon>
+                                        </lightning-button-group>
+                                        <lightning-button-group>
+                                            <lightning-button-icon
+                                                icon-name="standard:email"
+                                                variant="border-filled"
+                                                alternative-text="New Email"
+                                                title="New Email">
+                                            </lightning-button-icon>
+                                            <lightning-button-icon
+                                                icon-name="utility:down"
+                                                variant="border-filled"
+                                                alternative-text="More email actions"
+                                                title="More email actions">
+                                            </lightning-button-icon>
+                                        </lightning-button-group>
+                                    </div>
+
+                                    <!-- Filter bar -->
+                                    <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center slds-m-bottom_small">
+                                        <span class="slds-text-body_small">All Events • Most Recent Events</span>
+                                        <div class="slds-grid opp-activity__filter-btns">
+                                            <lightning-button-icon
+                                                icon-name="utility:settings"
+                                                variant="border-filled"
+                                                size="x-small"
+                                                alternative-text="Settings"
+                                                title="Settings">
+                                            </lightning-button-icon>
+                                            <lightning-button-icon
+                                                icon-name="utility:event"
+                                                variant="border-filled"
+                                                size="x-small"
+                                                alternative-text="Calendar"
+                                                title="Calendar">
+                                            </lightning-button-icon>
+                                            <lightning-button-icon
+                                                icon-name="utility:sort"
+                                                variant="border-filled"
+                                                size="x-small"
+                                                alternative-text="Sort"
+                                                title="Sort">
+                                            </lightning-button-icon>
+                                            <lightning-button-icon
+                                                icon-name="utility:filter"
+                                                variant="border-filled"
+                                                size="x-small"
+                                                alternative-text="Filter"
+                                                title="Filter">
+                                            </lightning-button-icon>
+                                        </div>
+                                    </div>
+
+                                    <!-- Upcoming & Overdue section -->
+                                    <div class="slds-section slds-is-open">
+                                        <h3 class="slds-section__title slds-theme_shade">
+                                            <button
+                                                type="button"
+                                                class="slds-button slds-section__title-action"
+                                                aria-controls="opp-activity-section"
+                                                aria-expanded="true">
+                                                <lightning-icon
+                                                    icon-name="utility:switch"
+                                                    size="x-small"
+                                                    class="slds-section__title-action-icon slds-button__icon_left"
+                                                    alternative-text="Toggle section">
+                                                </lightning-icon>
+                                                <span class="slds-truncate">Upcoming &amp; Overdue</span>
+                                            </button>
+                                        </h3>
+                                        <div id="opp-activity-section" class="slds-section__content">
+                                            <ul class="slds-timeline slds-p-top_x-small">
+
+                                                <!-- Activity: Call -->
+                                                <li>
+                                                    <div class="slds-timeline__item_expandable slds-timeline__item_call">
+                                                        <span class="slds-assistive-text">call</span>
+                                                        <div class="slds-media">
+                                                            <div class="slds-media__figure slds-timeline__figure">
+                                                                <lightning-button-icon
+                                                                    icon-name="utility:chevronright"
+                                                                    variant="bare"
+                                                                    size="x-small"
+                                                                    alternative-text="Expand"
+                                                                    title="Expand">
+                                                                </lightning-button-icon>
+                                                                <lightning-icon
+                                                                    icon-name="standard:log_a_call"
+                                                                    size="small"
+                                                                    class="slds-timeline__icon"
+                                                                    alternative-text="Log a Call">
+                                                                </lightning-icon>
+                                                            </div>
+                                                            <div class="slds-media__body">
+                                                                <div class="slds-grid slds-grid_align-spread slds-timeline__trigger">
+                                                                    <div class="slds-grid slds-grid_vertical-align-center">
+                                                                        <a href="javascript:void(0)" class="slds-text-link_bold">Mobile Conversation on Monday</a>
+                                                                    </div>
+                                                                    <div class="slds-timeline__actions slds-timeline__actions_inline">
+                                                                        <p class="slds-timeline__date">Sep 25</p>
+                                                                        <lightning-button-icon
+                                                                            icon-name="utility:down"
+                                                                            variant="border-filled"
+                                                                            size="x-small"
+                                                                            alternative-text="More actions"
+                                                                            title="More actions">
+                                                                        </lightning-button-icon>
+                                                                    </div>
+                                                                </div>
+                                                                <p class="slds-m-horizontal_xx-small slds-text-body_small">
+                                                                    <a href="javascript:void(0)" class="slds-text-link">You</a>
+                                                                    logged a call with
+                                                                    <a href="javascript:void(0)" class="slds-text-link">Adam Chan</a>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+
+                                                <!-- Activity: Event -->
+                                                <li>
+                                                    <div class="slds-timeline__item_expandable slds-timeline__item_event">
+                                                        <span class="slds-assistive-text">event</span>
+                                                        <div class="slds-media">
+                                                            <div class="slds-media__figure slds-timeline__figure">
+                                                                <lightning-button-icon
+                                                                    icon-name="utility:chevronright"
+                                                                    variant="bare"
+                                                                    size="x-small"
+                                                                    alternative-text="Expand"
+                                                                    title="Expand">
+                                                                </lightning-button-icon>
+                                                                <lightning-icon
+                                                                    icon-name="standard:event"
+                                                                    size="small"
+                                                                    class="slds-timeline__icon"
+                                                                    alternative-text="Event">
+                                                                </lightning-icon>
+                                                            </div>
+                                                            <div class="slds-media__body">
+                                                                <div class="slds-grid slds-grid_align-spread slds-timeline__trigger">
+                                                                    <div class="slds-grid slds-grid_vertical-align-center opp-activity__event-title">
+                                                                        <a href="javascript:void(0)" class="slds-text-link_bold">EBC Follow-up Call</a>
+                                                                        <lightning-icon
+                                                                            icon-name="utility:world"
+                                                                            size="x-small"
+                                                                            alternative-text="Online event">
+                                                                        </lightning-icon>
+                                                                    </div>
+                                                                    <div class="slds-timeline__actions slds-timeline__actions_inline">
+                                                                        <p class="slds-timeline__date">Sep 25</p>
+                                                                        <lightning-button-icon
+                                                                            icon-name="utility:down"
+                                                                            variant="border-filled"
+                                                                            size="x-small"
+                                                                            alternative-text="More actions"
+                                                                            title="More actions">
+                                                                        </lightning-button-icon>
+                                                                    </div>
+                                                                </div>
+                                                                <p class="slds-m-horizontal_xx-small slds-text-body_small">
+                                                                    <a href="javascript:void(0)" class="slds-text-link">You</a>
+                                                                    created an event with
+                                                                    <a href="javascript:void(0)" class="slds-text-link">Name</a>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+
+                                                <!-- Activity: Task -->
+                                                <li>
+                                                    <div class="slds-timeline__item_expandable slds-timeline__item_task">
+                                                        <span class="slds-assistive-text">task</span>
+                                                        <div class="slds-media">
+                                                            <div class="slds-media__figure slds-timeline__figure">
+                                                                <lightning-button-icon
+                                                                    icon-name="utility:chevronright"
+                                                                    variant="bare"
+                                                                    size="x-small"
+                                                                    alternative-text="Expand"
+                                                                    title="Expand">
+                                                                </lightning-button-icon>
+                                                                <lightning-icon
+                                                                    icon-name="standard:task"
+                                                                    size="small"
+                                                                    class="slds-timeline__icon"
+                                                                    alternative-text="Task">
+                                                                </lightning-icon>
+                                                            </div>
+                                                            <div class="slds-media__body">
+                                                                <div class="slds-grid slds-grid_align-spread slds-timeline__trigger">
+                                                                    <div class="slds-grid slds-grid_vertical-align-center">
+                                                                        <a href="javascript:void(0)" class="slds-text-link_bold">Review Proposals with Charlie Gomez</a>
+                                                                    </div>
+                                                                    <div class="slds-timeline__actions slds-timeline__actions_inline">
+                                                                        <p class="slds-timeline__date">Sep 25</p>
+                                                                        <lightning-button-icon
+                                                                            icon-name="utility:down"
+                                                                            variant="border-filled"
+                                                                            size="x-small"
+                                                                            alternative-text="More actions"
+                                                                            title="More actions">
+                                                                        </lightning-button-icon>
+                                                                    </div>
+                                                                </div>
+                                                                <p class="slds-m-horizontal_xx-small slds-text-body_small">
+                                                                    <a href="javascript:void(0)" class="slds-text-link">You</a>
+                                                                    created a task with
+                                                                    <a href="javascript:void(0)" class="slds-text-link">Charlie Gomez</a>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </lightning-tab>
+                            <lightning-tab label="Chatter"></lightning-tab>
+                            <lightning-tab label="Quip"></lightning-tab>
+                        </lightning-tabset>
+                    </div>
+                    <div class="slds-card__footer opp-activity-card__footer">
+                        <a href="javascript:void(0)" class="slds-text-link">View More</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</template>

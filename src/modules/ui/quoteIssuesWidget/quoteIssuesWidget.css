@@ -44,6 +44,7 @@
     padding: var(--slds-g-spacing-1, 0.25rem) var(--slds-g-spacing-3, 0.75rem);
     gap: var(--slds-g-spacing-2, 0.5rem);
     flex-wrap: wrap;
+    height: 48px;
 }
 
 /* ============================================================
@@ -54,6 +55,11 @@
     font-size: var(--slds-g-font-size-base, 13px);
     color: var(--slds-g-color-on-surface-1, #5c5c5c);
     line-height: var(--slds-g-font-line-height-2, 1.375);
+}
+
+/* Valid state icon */
+.qiw_state_valid .qiw__flat-icon {
+    color: var(--slds-g-color-on-success-1, #2e7d32);
 }
 
 /* ============================================================
@@ -167,7 +173,7 @@
 
 .qiw__issue-row {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: var(--slds-g-spacing-2, 0.5rem);
     padding: var(--slds-g-spacing-2, 0.5rem) var(--slds-g-spacing-3, 0.75rem);
 }

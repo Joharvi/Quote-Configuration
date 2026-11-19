@@ -170,7 +170,7 @@
                         <ui-quote-issues-widget
                             product-count={psProducts.length}
                             issues={psIssuesList}
-                            show-configure-tenant={psHasProducts}
+                            show-configure-tenant={psHasUnassigned}
                             show-suggested-products={psHasProducts}
                             onconfiguretenant={psHandleConfigureTenant}
                             onsuggestedproducts={psHandleSuggestedProducts}>
@@ -207,7 +207,7 @@
                                 </div>
                                 <div class="qc-ps-catalog-wrap">
                                     <table
-                                        class="slds-table slds-table_bordered slds-table_fixed-layout qc-ps-table"
+                                        class="slds-table slds-table_fixed-layout qc-ps-table"
                                         role="grid"
                                         aria-label="Product Catalog">
                                         <thead>
@@ -300,7 +300,7 @@
                                             title="Cart actions">
                                         </lightning-button-icon>
                                         <lightning-button-icon
-                                            icon-name="utility:delete_1"
+                                            icon-name="utility:delete"
                                             variant="border"
                                             alternative-text="Delete selected products"
                                             title="Delete selected">
@@ -328,7 +328,7 @@
                                     <template lwc:else>
                                         <div class="qc-ps-sel-table-wrap">
                                             <table
-                                                class="slds-table slds-table_bordered slds-table_fixed-layout qc-ps-table qc-ps-sel-table"
+                                                class="slds-table slds-table_fixed-layout qc-ps-table qc-ps-sel-table"
                                                 role="grid"
                                                 aria-label="Selected Products"
                                                 aria-live="polite">
@@ -353,14 +353,16 @@
                                                         <tr key={product.id} class="slds-hint-parent" role="row">
                                                             <td role="gridcell">
                                                                 <div class="slds-media slds-media_center qc-ps-product-cell">
-                                                                    <div class="slds-media__figure">
-                                                                        <lightning-icon
-                                                                            icon-name="utility:warning"
-                                                                            size="x-small"
-                                                                            class="qc-ps-warning-icon"
-                                                                            alternative-text="Tenant configuration warning">
-                                                                        </lightning-icon>
-                                                                    </div>
+                                                                    <template lwc:if={product.showWarning}>
+                                                                        <div class="slds-media__figure">
+                                                                            <lightning-icon
+                                                                                icon-name="utility:warning"
+                                                                                size="x-small"
+                                                                                class="qc-ps-warning-icon"
+                                                                                alternative-text="Tenant configuration warning">
+                                                                            </lightning-icon>
+                                                                        </div>
+                                                                    </template>
                                                                     <div class="slds-media__body">
                                                                         <a href="javascript:void(0)" class="qc-ps-link qc-ps-link_wrap">{product.name}</a>
                                                                     </div>
@@ -380,37 +382,26 @@
                                                                 </lightning-input>
                                                             </td>
                                                             <td role="gridcell">
-                                                                <lightning-combobox
-                                                                    name="psTenant"
+                                                                <lightning-input
                                                                     label="Tenant"
                                                                     variant="label-hidden"
-                                                                    value={product.tenant}
-                                                                    options={psTenantStatusOptions}
-                                                                    disabled
-                                                                    class="qc-ps-tenant-pick"
-                                                                    data-id={product.id}>
-                                                                </lightning-combobox>
+                                                                    value={product.tenantDisplay}
+                                                                    read-only
+                                                                    class="qc-ps-tenant-input">
+                                                                </lightning-input>
                                                             </td>
                                                             <td role="gridcell" class="qc-ps-col-actions">
                                                                 <div class="qc-ps-row-actions">
                                                                     <lightning-button-icon
-                                                                        icon-name="utility:add"
+                                                                        icon-name="utility:edit"
                                                                         variant="border"
-                                                                        alternative-text="Add bundle"
-                                                                        title="Add bundle"
+                                                                        alternative-text="Configure tenant"
+                                                                        title="Configure tenant"
                                                                         data-id={product.id}
-                                                                        onclick={psHandleAddBundle}>
+                                                                        onclick={psHandleEditTenant}>
                                                                     </lightning-button-icon>
                                                                     <lightning-button-icon
-                                                                        icon-name="utility:edit_1"
-                                                                        variant="border"
-                                                                        alternative-text="Edit bundle"
-                                                                        title="Edit bundle"
-                                                                        data-id={product.id}
-                                                                        onclick={psHandleEditBundle}>
-                                                                    </lightning-button-icon>
-                                                                    <lightning-button-icon
-                                                                        icon-name="utility:delete_1"
+                                                                        icon-name="utility:delete"
                                                                         variant="border"
                                                                         alternative-text="Delete product"
                                                                         title="Delete"
@@ -432,7 +423,156 @@
                     </div>
                 </template>
 
-                <!-- Steps 2–5: placeholder panels -->
+                <!-- Step 2 (Version B): Tenant Configuration -->
+                <template lwc:elseif={isStepTenantConfiguration}>
+                    <div class="qc-ps-step">
+
+                        <!-- Quote Issues Widget — only shown when products exist -->
+                        <template lwc:if={psHasProducts}>
+                            <ui-quote-issues-widget
+                                product-count={psProducts.length}
+                                issues={psIssuesList}
+                                show-configure-tenant={psHasUnassigned}
+                                show-suggested-products={psTcShowSuggested}
+                                onconfiguretenant={psHandleConfigureTenant}>
+                            </ui-quote-issues-widget>
+                        </template>
+
+                        <!-- Single full-width Selected Products panel -->
+                        <div class="qc-ps-panel qc-tc-panel">
+                            <div class="qc-ps-sel-header">
+                                <div class="qc-ps-sel-header__left">
+                                    <lightning-icon icon-name="utility:cart" size="small" alternative-text="Selected Products"></lightning-icon>
+                                    <h2 class="qc-ps-panel__title">{psCountLabel}</h2>
+                                </div>
+                            </div>
+
+                            <div class="qc-ps-sel-body">
+
+                                <!-- Empty state -->
+                                <template lwc:if={psShowEmpty}>
+                                    <div class="qc-ps-empty" role="status" aria-label="No products selected">
+                                        <div class="qc-ps-empty__icon">
+                                            <lightning-icon
+                                                icon-name="standard:product"
+                                                size="large"
+                                                alternative-text="No products selected">
+                                            </lightning-icon>
+                                        </div>
+                                        <div class="qc-ps-empty__text qc-tc-empty-text">
+                                            <p class="slds-text-heading_small">No Products Selected</p>
+                                            <p class="slds-text-body_regular">Go back to Product Selection to add products before configuring tenant settings.</p>
+                                        </div>
+                                        <lightning-button
+                                            label="Go to Product Selection"
+                                            variant="brand"
+                                            icon-name="utility:chevronleft"
+                                            icon-position="left"
+                                            onclick={handleBack}>
+                                        </lightning-button>
+                                    </div>
+                                </template>
+
+                                <!-- Active: selected products table with tenant actions -->
+                                <template lwc:else>
+                                    <div class="qc-ps-sel-table-wrap">
+                                        <table
+                                            class="slds-table slds-table_bordered slds-table_fixed-layout qc-ps-table qc-ps-sel-table"
+                                            role="grid"
+                                            aria-label="Selected Products"
+                                            aria-live="polite">
+                                            <thead>
+                                                <tr class="slds-line-height_reset">
+                                                    <th class="slds-text-title_caps" scope="col">
+                                                        <div class="slds-truncate" title="Product Name">Product Name</div>
+                                                    </th>
+                                                    <th class="slds-text-title_caps qc-ps-col-qty" scope="col">
+                                                        <div class="slds-truncate" title="Quantity">Quantity</div>
+                                                    </th>
+                                                    <th class="slds-text-title_caps" scope="col">
+                                                        <div class="slds-truncate" title="Tenant">Tenant</div>
+                                                    </th>
+                                                    <th class="qc-ps-col-actions" scope="col">
+                                                        <span class="slds-assistive-text">Actions</span>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <template for:each={psProducts} for:item="product">
+                                                    <tr key={product.id} class="slds-hint-parent" role="row">
+                                                        <td role="gridcell">
+                                                            <div class="slds-media slds-media_center qc-ps-product-cell">
+                                                                <template lwc:if={product.showWarning}>
+                                                                    <div class="slds-media__figure">
+                                                                        <lightning-icon
+                                                                            icon-name="utility:warning"
+                                                                            size="x-small"
+                                                                            class="qc-ps-warning-icon"
+                                                                            alternative-text="Tenant configuration required">
+                                                                        </lightning-icon>
+                                                                    </div>
+                                                                </template>
+                                                                <div class="slds-media__body">
+                                                                    <a href="javascript:void(0)" class="qc-ps-link qc-ps-link_wrap">{product.name}</a>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td role="gridcell" class="qc-ps-col-qty">
+                                                            <lightning-input
+                                                                type="number"
+                                                                label="Quantity"
+                                                                variant="label-hidden"
+                                                                value={product.quantity}
+                                                                min="1"
+                                                                step="1"
+                                                                data-id={product.id}
+                                                                onchange={psHandleQtyChange}
+                                                                class="qc-ps-qty-input">
+                                                            </lightning-input>
+                                                        </td>
+                                                        <td role="gridcell">
+                                                            <lightning-input
+                                                                label="Tenant"
+                                                                variant="label-hidden"
+                                                                value={product.tenantDisplay}
+                                                                read-only
+                                                                class="qc-ps-tenant-input">
+                                                            </lightning-input>
+                                                        </td>
+                                                        <td role="gridcell" class="qc-ps-col-actions">
+                                                            <div class="qc-ps-row-actions">
+                                                                <lightning-button-icon
+                                                                    icon-name="utility:edit"
+                                                                    variant="border"
+                                                                    alternative-text="Configure tenant"
+                                                                    title="Configure tenant"
+                                                                    data-id={product.id}
+                                                                    onclick={psHandleEditTenant}>
+                                                                </lightning-button-icon>
+                                                                <lightning-button-icon
+                                                                    icon-name="utility:delete"
+                                                                    variant="border"
+                                                                    alternative-text="Delete product"
+                                                                    title="Delete"
+                                                                    data-id={product.id}
+                                                                    onclick={psHandleDelete}>
+                                                                </lightning-button-icon>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </template>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </template>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </template>
+
+                <!-- Remaining steps: placeholder panels -->
                 <template lwc:else>
                     <div class="qc-form-panel qc-step-placeholder">
                         <p class="slds-text-heading_small slds-text-color_weak">{currentStepLabel} — coming soon</p>

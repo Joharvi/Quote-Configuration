@@ -1,55 +1,134 @@
-# SLDS Starter Kit (LWC)
+# Quote Configurator Prototype — Project Wilson
 
-A starter for prototyping Salesforce experiences, with SLDS 1/2 switching and dark mode previews. Build and preview locally, then publish a link to share your prototype.
+An interactive UI prototype for the Quote Configurator flow targeting NBA Commercial Offering customers. Built with Lightning Web Components (LWC), Vite, and Salesforce Lightning Design System (SLDS v2).
 
-Built with Vite, Lightning Web Components (LWC), Salesforce Lightning Design System (SLDS), and Lightning Base Components.
+## Prerequisites
 
-## Get started
+- Node.js 20 or later
+- npm
 
-Clone or copy this repository, open it in your coding agent, and ask:
-
-> Run this project.
-
-Requires Node.js 20 or later.
-
-To run it yourself:
+## Getting started
 
 ```bash
 npm install
 npm run dev
 ```
 
-## Build with your coding agent
+The dev server runs at `http://localhost:3000` (or the next available port) with hot reload.
 
-Describe the experience you want to create:
+## Navigation
 
-> Create an account dashboard with summary cards and a contacts table.
+The prototype uses a multi-app shell with an App Launcher (waffle icon, top-left). Switch between apps using the launcher.
 
-The project includes agent instructions, Salesforce design system skills, and an MCP configuration for Salesforce development tools. A consistent component structure and working examples help your agent build on existing patterns and use Salesforce components.
+### Apps
 
-Iterate by describing changes, sharing screenshots, or pointing to an existing experience as a reference.
+| App | URL prefix | Description |
+|-----|-----------|-------------|
+| Sales | `/app` | Standard tab navigation — the primary app for the quote flow |
+| Console App | `/console` | Console-style object switcher layout |
+| Builder | `/builder` | Builder layout (structural only) |
 
-## What's included
+### Pages (Sales app)
 
-- Lightning Base Components and SLDS styles.
-- Standard, Console, and Builder app layouts.
-- Sample Home, Icons, Contacts, and contact detail pages.
-- Light/dark themes and SLDS 1/2 switching.
-- Local development with hot reload and page navigation.
+Navigate using the top tab bar or by switching pages from the App Launcher.
 
-## Share your prototype
+| Page | URL | Description |
+|------|-----|-------------|
+| Opportunities | `/app/opportunities` | Default landing page |
+| Accounts | `/app/accounts` | Accounts list |
+| Leads | `/app/leads` | Leads list |
+| Product Bundles | `/app/product-bundles` | Product bundle catalog |
+| Quote | `/app/quote` | **Quote Configurator entry point** |
+| Reports | `/app/reports` | Reports placeholder |
+| Dashboards | `/app/dashboards` | Dashboards placeholder |
 
-Ask your agent:
+## Quote Configurator flow
 
-> Deploy this project to GitHub Pages and give me the link.
+The quote flow is the core of this prototype. Access it via the **Quote** tab in the Sales app.
 
-The project includes guided setup for a GitHub repository and first deployment. Ask your agent to deploy again whenever you want to publish updates.
+### Step 1 — Quote Configurator (`/app/quote`)
 
-The deployment command is `npm run deploy`. See the [deployment reference](docs/development.md#github-pages) for setup details.
+The parent configurator page. Hosts the `quoteIssuesWidget` which surfaces validation states and configuration actions.
 
-## Further reading
+Widget states:
+- **Empty** — no products added yet
+- **Warning** — products added but configuration incomplete
+- **Issues** — one or more blocking issues (e.g. missing tenant assignment)
+- **Valid** — all products configured and ready
 
-- [Development reference](docs/development.md): project structure, routing, styling, and deployment.
-- [Lightning Design System](https://lightningdesignsystem.com)
-- [Lightning Web Components](https://developer.salesforce.com/docs/component-library/documentation/en/lwc)
-- [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [License](LICENSE.txt)
+### Step 2 — Product Selection (`/app/quote/product-selection`)
+
+Reached from the Quote Configurator page. Lists available products for the quote.
+
+For each product, a **pencil icon** opens the Tenant Configuration modal to assign an org.
+
+### Step 3 — Tenant Configuration (`/app/quote/tenant-configuration`)
+
+A dedicated tenant configuration page (also accessible as a modal from product rows and issue detail links).
+
+#### Tenant Configuration Modal
+
+Opened from three entry points:
+1. Pencil icon on a product row in Product Selection
+2. "Configure Tenant" button in the Issues Widget header
+3. "Configure Tenant" link in an individual issue detail row
+
+The modal lets the user:
+- Select an existing org (Production or Sandbox)
+- Choose **"Provision net-new"** *(stubbed — not completable in this prototype)*
+
+Org data (static, for prototyping purposes):
+
+| Org | ID | Type |
+|-----|----|------|
+| Production | 00D50000000xxxx | Production |
+| Sandbox | 00D50000000yyyy | Sandbox |
+
+Re-opening the modal for an already-configured product pre-loads the previously saved assignment.
+
+## Project structure
+
+```
+src/
+├── modules/
+│   ├── page/               # Route views (one per route)
+│   │   ├── quoteConfigurator/     # Quote parent page
+│   │   ├── quoteProductSelection/ # Product selection step
+│   │   ├── quoteTenantConfiguration/ # Tenant config page
+│   │   └── ...                    # Other app pages
+│   ├── ui/                 # Reusable components
+│   │   ├── quoteIssuesWidget/     # Issues/valid state widget
+│   │   ├── tenantConfigModal/     # Tenant assignment modal
+│   │   └── ...
+│   ├── data/               # Data modules (product store, flow config, quote session)
+│   └── shell/              # App shell, layout, theme
+├── routes.config.js        # All route definitions
+├── apps.config.js          # App definitions and nav structure
+└── index.js                # Entry point
+```
+
+## Available scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start dev server with hot reload |
+| `npm run build` | Production build (path routing) |
+| `npm run build:gh-pages` | Build for GitHub Pages (hash routing) |
+| `npm run deploy` | Build and deploy to `gh-pages` branch |
+| `npm test` | Run routing tests |
+| `npm run clean` | Remove `dist/`, `.vite/`, `node_modules/` |
+
+## Deploying to GitHub Pages
+
+```bash
+npm run deploy
+```
+
+This builds the project with hash routing and pushes `dist/` to the `gh-pages` branch on `origin`. GitHub Pages must be set to **Deploy from a branch → gh-pages**.
+
+## Stack
+
+- [Lightning Web Components (LWC)](https://developer.salesforce.com/docs/component-library/documentation/en/lwc)
+- [Salesforce Lightning Design System (SLDS)](https://lightningdesignsystem.com)
+- [Vite](https://vitejs.dev)
+- Lightning Base Components
