@@ -15,6 +15,14 @@ import Contacts from 'page/contacts';
 import ContactDetail from 'page/contactDetail';
 import Builder from 'page/builder';
 import NotFound from 'page/notFound';
+import Accounts from 'page/accounts';
+import Opportunities from 'page/opportunities';
+import Leads from 'page/leads';
+import Reports from 'page/reports';
+import Dashboards from 'page/dashboards';
+import ProductBundles from 'page/productBundles';
+import QuoteConfigurator from 'page/quoteConfigurator';
+import QuoteProductSelection from 'page/quoteProductSelection';
 
 /** Option A: explicit registration – add one import + one entry here when adding a route */
 const ROUTE_COMPONENTS = {
@@ -23,6 +31,14 @@ const ROUTE_COMPONENTS = {
     'page-contacts': Contacts,
     'page-contact-detail': ContactDetail,
     'page-builder': Builder,
+    'page-accounts': Accounts,
+    'page-opportunities': Opportunities,
+    'page-leads': Leads,
+    'page-reports': Reports,
+    'page-dashboards': Dashboards,
+    'page-product-bundles': ProductBundles,
+    'page-quote-configurator': QuoteConfigurator,
+    'page-quote-product-selection': QuoteProductSelection,
 };
 
 /** Derived from routes.config: component name → nav page id (includes navHighlight for child routes) */

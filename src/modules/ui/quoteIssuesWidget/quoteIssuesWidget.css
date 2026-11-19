@@ -1,0 +1,219 @@
+/* ============================================================
+   Host
+   ============================================================ */
+
+:host {
+    display: block;
+}
+
+/* ============================================================
+   Container — four state variants
+   ============================================================ */
+
+.qiw {
+    border-radius: var(--slds-g-radius-border-3, 0.75rem);
+    flex-shrink: 0;
+}
+
+/* Empty / Valid: white surface, neutral border */
+.qiw_state_empty,
+.qiw_state_valid {
+    background-color: var(--slds-g-color-neutral-base-100, #fff);
+    border: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-border-1, #c9c9c9);
+}
+
+/* Warning-only: yellow surface, warning border */
+.qiw_state_warning {
+    background-color: var(--slds-g-color-warning-base-90, #f9e3b6);
+    border: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-on-warning-1, #8c4b02);
+}
+
+/* Mixed errors/warnings: light red surface, error border */
+.qiw_state_issues {
+    background-color: var(--slds-g-color-error-base-90, #fddde3);
+    border: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-border-error-1, #b60554);
+}
+
+/* ============================================================
+   Header row — shared by all states
+   ============================================================ */
+
+.qiw__header {
+    display: flex;
+    align-items: center;
+    padding: var(--slds-g-spacing-1, 0.25rem) var(--slds-g-spacing-3, 0.75rem);
+    gap: var(--slds-g-spacing-2, 0.5rem);
+    flex-wrap: wrap;
+}
+
+/* ============================================================
+   Flat-state text (empty / valid)
+   ============================================================ */
+
+.qiw__label {
+    font-size: var(--slds-g-font-size-base, 13px);
+    color: var(--slds-g-color-on-surface-1, #5c5c5c);
+    line-height: var(--slds-g-font-line-height-2, 1.375);
+}
+
+/* ============================================================
+   Active-state header elements
+   ============================================================ */
+
+/* Expand/collapse native button reset */
+.qiw__toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    border-radius: var(--slds-g-radius-border-1, 2px);
+}
+
+.qiw_state_warning .qiw__toggle {
+    color: var(--slds-g-color-on-warning-1, #8c4b02);
+}
+
+.qiw_state_issues .qiw__toggle {
+    color: var(--slds-g-color-error-1, #b60554);
+}
+
+.qiw__toggle:focus-visible {
+    outline: var(--slds-g-sizing-border-2, 2px) solid currentColor;
+    outline-offset: var(--slds-g-spacing-1, 0.25rem);
+}
+
+.qiw__title {
+    font-size: var(--slds-g-font-size-base, 13px);
+    font-weight: var(--slds-g-font-weight-7, 700);
+    line-height: var(--slds-g-font-line-height-2, 1.375);
+}
+
+.qiw_state_warning .qiw__title {
+    color: var(--slds-g-color-on-warning-1, #8c4b02);
+}
+
+.qiw_state_issues .qiw__title {
+    color: var(--slds-g-color-error-1, #b60554);
+}
+
+/* ============================================================
+   Counters: icon + count text pairs
+   ============================================================ */
+
+.qiw__counters {
+    display: flex;
+    align-items: center;
+    gap: var(--slds-g-spacing-1, 0.25rem);
+}
+
+.qiw__counter-text {
+    font-size: var(--slds-g-font-size-base, 13px);
+    line-height: var(--slds-g-font-line-height-2, 1.375);
+}
+
+.qiw_state_warning .qiw__counter-text {
+    color: var(--slds-g-color-on-warning-1, #8c4b02);
+}
+
+.qiw_state_issues .qiw__counter-text {
+    color: var(--slds-g-color-error-1, #b60554);
+}
+
+.qiw__counter-icon_warning {
+    color: var(--slds-g-color-warning-1, #8c4b02);
+}
+
+.qiw__counter-icon_error {
+    color: var(--slds-g-color-error-1, #b60554);
+}
+
+/* ============================================================
+   Header action area
+   ============================================================ */
+
+.qiw__configure-btn {
+    margin-left: var(--slds-g-spacing-1, 0.25rem);
+}
+
+/* Pushes "Suggested Products" to the far right */
+.qiw__spacer {
+    flex: 1;
+    min-width: 0;
+}
+
+/* ============================================================
+   Details panel (expanded)
+   ============================================================ */
+
+.qiw_state_warning .qiw__details {
+    border-top: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-on-warning-1, #8c4b02);
+}
+
+.qiw_state_issues .qiw__details {
+    border-top: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-border-error-1, #b60554);
+}
+
+.qiw__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* ============================================================
+   Issue row
+   ============================================================ */
+
+.qiw__issue-row {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--slds-g-spacing-2, 0.5rem);
+    padding: var(--slds-g-spacing-2, 0.5rem) var(--slds-g-spacing-3, 0.75rem);
+}
+
+/* Message text + inline action sit on the same line */
+.qiw__issue-content {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    flex: 1;
+}
+
+.qiw__issue-msg {
+    font-size: var(--slds-g-font-size-base, 13px);
+    line-height: var(--slds-g-font-line-height-2, 1.375);
+}
+
+.qiw_state_warning .qiw__issue-msg {
+    color: var(--slds-g-color-on-warning-1, #8c4b02);
+}
+
+.qiw_state_issues .qiw__issue-msg {
+    color: var(--slds-g-color-error-1, #b60554);
+}
+
+.qiw__issue-sep {
+    font-size: var(--slds-g-font-size-base, 13px);
+    white-space: pre;
+}
+
+.qiw_state_warning .qiw__issue-sep {
+    color: var(--slds-g-color-on-warning-1, #8c4b02);
+}
+
+.qiw_state_issues .qiw__issue-sep {
+    color: var(--slds-g-color-error-1, #b60554);
+}
+
+/* ============================================================
+   Per-row severity icon colors
+   ============================================================ */
+
+.qiw__severity-icon_warning {
+    color: var(--slds-g-color-warning-1, #8c4b02);
+}
+
+.qiw__severity-icon_error {
+    color: var(--slds-g-color-error-1, #b60554);
+}

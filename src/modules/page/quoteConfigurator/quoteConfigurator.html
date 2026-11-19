@@ -1,0 +1,476 @@
+<template>
+    <div class="qc-page">
+
+        <!-- Page Header — reuses ui-page-header with base variant so meta text and actions render together -->
+        <ui-page-header
+            class="qc-header"
+            variant="base"
+            icon-name="standard:quotes"
+            title="Quote Configurator"
+            meta-text={headerMeta}
+            label="Quote Configurator">
+            <div slot="actions">
+                <lightning-button-group>
+                    <lightning-button label="Save and Exit" variant="neutral"></lightning-button>
+                    <lightning-button label="Sales Support" variant="brand"></lightning-button>
+                </lightning-button-group>
+            </div>
+        </ui-page-header>
+
+        <!-- Body -->
+        <div class="qc-body">
+
+            <!-- Progress Path -->
+            <div class="slds-path qc-path">
+                <div class="slds-path__track">
+                    <div class="slds-grid slds-path__scroller-container qc-path__scroller-container">
+                        <div class="slds-path__scroller qc-path__scroller" role="application">
+                            <div class="slds-path__scroller_inner qc-path__scroller-inner">
+                                <ul class="slds-path__nav qc-path__nav" role="listbox" aria-orientation="horizontal" aria-label="Quote Configurator Progress">
+                                    <template for:each={pathSteps} for:item="step">
+                                        <li key={step.key} class={step.itemClass} role="presentation">
+                                            <a
+                                                class={step.linkClass}
+                                                href="javascript:void(0)"
+                                                role="option"
+                                                tabindex={step.tabIndex}
+                                                aria-selected={step.ariaSelected}
+                                                title={step.label}>
+                                                <span class="slds-path__stage">
+                                                    <template lwc:if={step.isComplete}>
+                                                        <lightning-icon
+                                                            icon-name="utility:check"
+                                                            size="x-small"
+                                                            alternative-text="Complete">
+                                                        </lightning-icon>
+                                                    </template>
+                                                    <template lwc:if={step.isCurrent}>
+                                                        <span class="slds-assistive-text">Current Stage:</span>
+                                                    </template>
+                                                </span>
+                                                <span class="slds-path__title">{step.label}</span>
+                                            </a>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step content -->
+            <div class="qc-step-content">
+
+                <!-- Step 0: Quote Header -->
+                <template lwc:if={isStepQuoteHeader}>
+                    <div class="qc-form-panel">
+                        <div class="slds-grid qc-form-grid">
+
+                            <!-- Left Column -->
+                            <div class="slds-col">
+                                <lightning-input
+                                    type="date"
+                                    label="Service Start Date"
+                                    value="2025-10-02"
+                                    required
+                                    variant="label-stacked">
+                                </lightning-input>
+                                <div class="qc-field-spacing">
+                                    <lightning-input
+                                        type="number"
+                                        label="Term"
+                                        value="12"
+                                        required
+                                        variant="label-stacked">
+                                    </lightning-input>
+                                </div>
+                                <div class="qc-field-spacing">
+                                    <lightning-input
+                                        type="date"
+                                        label="Valid Until Date"
+                                        value="2025-10-02"
+                                        required
+                                        variant="label-stacked">
+                                    </lightning-input>
+                                </div>
+                                <div class="qc-field-spacing">
+                                    <lightning-combobox
+                                        label="Reseller Partner"
+                                        value=""
+                                        placeholder="Please enter Reseller Partner"
+                                        options={emptyOptions}
+                                        required
+                                        variant="label-stacked">
+                                    </lightning-combobox>
+                                </div>
+                                <div class="qc-field-spacing">
+                                    <lightning-combobox
+                                        label="Reseller Role"
+                                        value=""
+                                        placeholder="Select an Option"
+                                        options={resellerRoleOptions}
+                                        required
+                                        variant="label-stacked">
+                                    </lightning-combobox>
+                                </div>
+                            </div>
+
+                            <!-- Right Column -->
+                            <div class="slds-col">
+                                <lightning-combobox
+                                    label="Billing Currency"
+                                    value="USD"
+                                    options={currencyOptions}
+                                    required
+                                    variant="label-stacked">
+                                </lightning-combobox>
+                                <div class="qc-field-spacing">
+                                    <lightning-combobox
+                                        label="Price List"
+                                        value="CPQ - Direct - Commercial - Ohana - WW - USD"
+                                        options={priceListOptions}
+                                        required
+                                        variant="label-stacked">
+                                    </lightning-combobox>
+                                </div>
+                                <div class="qc-field-spacing">
+                                    <lightning-combobox
+                                        label="Billing Country"
+                                        value="US - United States"
+                                        options={countryOptions}
+                                        required
+                                        variant="label-stacked">
+                                    </lightning-combobox>
+                                </div>
+                                <div class="qc-field-spacing-sm">
+                                    <lightning-input
+                                        type="checkbox"
+                                        label="Eligible for Auto Roll"
+                                        checked>
+                                    </lightning-input>
+                                </div>
+                                <div class="qc-field-spacing-sm">
+                                    <lightning-input
+                                        type="checkbox"
+                                        label="Bypass Special Term Defaults">
+                                    </lightning-input>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Step 1: Product Selection -->
+                <template lwc:elseif={isStepProductSelection}>
+                    <div class="qc-ps-step">
+
+                        <!-- Quote Issues Widget -->
+                        <ui-quote-issues-widget
+                            product-count={psProducts.length}
+                            issues={psIssuesList}
+                            show-configure-tenant={psHasProducts}
+                            show-suggested-products={psHasProducts}
+                            onconfiguretenant={psHandleConfigureTenant}
+                            onsuggestedproducts={psHandleSuggestedProducts}>
+                        </ui-quote-issues-widget>
+
+                        <!-- Workspace: Catalog + Selected Products -->
+                        <div class="qc-ps-workspace">
+
+                            <!-- Product Catalog Panel -->
+                            <div class="qc-ps-panel">
+                                <div class="qc-ps-panel__header">
+                                    <lightning-icon icon-name="standard:price_books" size="small" alternative-text="Product Catalog"></lightning-icon>
+                                    <h2 class="qc-ps-panel__title">Product Catalog</h2>
+                                </div>
+                                <div class="qc-ps-filters">
+                                    <lightning-combobox
+                                        name="psCategory"
+                                        label="Category"
+                                        value={psCategory}
+                                        options={psCategoryOptions}
+                                        variant="label-hidden"
+                                        class="qc-ps-filter-pick"
+                                        onchange={psHandleCategory}>
+                                    </lightning-combobox>
+                                    <lightning-input
+                                        type="search"
+                                        label="Search Products"
+                                        variant="label-hidden"
+                                        placeholder="Search Products or Bundles"
+                                        value={psSearch}
+                                        class="qc-ps-filter-search"
+                                        onchange={psHandleSearch}>
+                                    </lightning-input>
+                                </div>
+                                <div class="qc-ps-catalog-wrap">
+                                    <table
+                                        class="slds-table slds-table_bordered slds-table_fixed-layout qc-ps-table"
+                                        role="grid"
+                                        aria-label="Product Catalog">
+                                        <thead>
+                                            <tr class="slds-line-height_reset">
+                                                <th class="slds-text-title_caps" scope="col">
+                                                    <div class="slds-truncate" title="Product Name">Product Name</div>
+                                                </th>
+                                                <th class="slds-text-title_caps qc-ps-col-price" scope="col">
+                                                    <div class="slds-truncate" title="List Price">List Price</div>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <template for:each={psCatalogItems} for:item="item">
+                                                <tr
+                                                    key={item.id}
+                                                    class="slds-hint-parent qc-ps-catalog-row"
+                                                    role="row"
+                                                    tabindex="0"
+                                                    data-id={item.id}
+                                                    onclick={psHandleSelect}
+                                                    onkeydown={psHandleKeydown}
+                                                    aria-label={item.selectLabel}>
+                                                    <td role="gridcell">
+                                                        <div class="slds-truncate" title={item.name}>
+                                                            <a href="javascript:void(0)" class="qc-ps-link" tabindex="-1">{item.name}</a>
+                                                        </div>
+                                                    </td>
+                                                    <td role="gridcell" class="qc-ps-col-price">
+                                                        <div class="slds-truncate" title={item.price}>{item.price}</div>
+                                                    </td>
+                                                </tr>
+                                            </template>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="qc-ps-panel__footer">
+                                    <span class="qc-ps-panel__count">{psCatalogCount}</span>
+                                    <div class="qc-ps-pagination" role="navigation" aria-label="Catalog pagination">
+                                        <button class="qc-ps-pagination__btn" type="button" aria-label="First page" disabled>First</button>
+                                        <button class="qc-ps-pagination__btn" type="button" aria-label="Previous page" disabled>Prev</button>
+                                        <span class="qc-ps-pagination__page" aria-current="page">1</span>
+                                        <span class="qc-ps-pagination__sep">of 2</span>
+                                        <button class="qc-ps-pagination__btn" type="button" aria-label="Next page">Next</button>
+                                        <button class="qc-ps-pagination__btn" type="button" aria-label="Last page">Last</button>
+                                    </div>
+                                    <div class="qc-ps-page-size">
+                                        <lightning-combobox
+                                            name="psPageSize"
+                                            label="Page size"
+                                            value="20"
+                                            options={psPageSizeOptions}
+                                            variant="label-inline"
+                                            class="qc-ps-page-size-pick">
+                                        </lightning-combobox>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Selected Products Panel -->
+                            <div class="qc-ps-panel">
+                                <div class="qc-ps-sel-header">
+                                    <div class="qc-ps-sel-header__left">
+                                        <lightning-icon icon-name="utility:cart" size="small" alternative-text="Selected Products"></lightning-icon>
+                                        <h2 class="qc-ps-panel__title">{psCountLabel}</h2>
+                                    </div>
+                                    <div class="qc-ps-sel-header__controls">
+                                        <lightning-combobox
+                                            name="psTenantFilter"
+                                            label="Filter by Tenant"
+                                            value=""
+                                            placeholder="Filter by Tenant"
+                                            options={psTenantFilterOptions}
+                                            variant="label-hidden"
+                                            class="qc-ps-filter-pick qc-ps-filter-pick_sm">
+                                        </lightning-combobox>
+                                        <lightning-combobox
+                                            name="psSelectCart"
+                                            label="Select Cart"
+                                            value=""
+                                            placeholder="Select Cart"
+                                            options={psCartOptions}
+                                            variant="label-hidden"
+                                            class="qc-ps-filter-pick qc-ps-filter-pick_sm">
+                                        </lightning-combobox>
+                                        <lightning-button-icon
+                                            icon-name="utility:cart"
+                                            variant="border"
+                                            alternative-text="Cart actions"
+                                            title="Cart actions">
+                                        </lightning-button-icon>
+                                        <lightning-button-icon
+                                            icon-name="utility:delete_1"
+                                            variant="border"
+                                            alternative-text="Delete selected products"
+                                            title="Delete selected">
+                                        </lightning-button-icon>
+                                    </div>
+                                </div>
+                                <div class="qc-ps-sel-body">
+                                    <!-- Empty state -->
+                                    <template lwc:if={psShowEmpty}>
+                                        <div class="qc-ps-empty" role="status" aria-label="No products selected">
+                                            <div class="qc-ps-empty__icon">
+                                                <lightning-icon
+                                                    icon-name="standard:search"
+                                                    size="large"
+                                                    alternative-text="No products selected">
+                                                </lightning-icon>
+                                            </div>
+                                            <div class="qc-ps-empty__text">
+                                                <p class="slds-text-body_regular">No product selected.</p>
+                                                <p class="slds-text-body_regular">Select a product to continue.</p>
+                                            </div>
+                                        </div>
+                                    </template>
+                                    <!-- Active: selected products table -->
+                                    <template lwc:else>
+                                        <div class="qc-ps-sel-table-wrap">
+                                            <table
+                                                class="slds-table slds-table_bordered slds-table_fixed-layout qc-ps-table qc-ps-sel-table"
+                                                role="grid"
+                                                aria-label="Selected Products"
+                                                aria-live="polite">
+                                                <thead>
+                                                    <tr class="slds-line-height_reset">
+                                                        <th class="slds-text-title_caps" scope="col">
+                                                            <div class="slds-truncate" title="Product Name">Product Name</div>
+                                                        </th>
+                                                        <th class="slds-text-title_caps qc-ps-col-qty" scope="col">
+                                                            <div class="slds-truncate" title="Quantity">Quantity</div>
+                                                        </th>
+                                                        <th class="slds-text-title_caps" scope="col">
+                                                            <div class="slds-truncate" title="Tenant">Tenant</div>
+                                                        </th>
+                                                        <th class="qc-ps-col-actions" scope="col">
+                                                            <span class="slds-assistive-text">Actions</span>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <template for:each={psProducts} for:item="product">
+                                                        <tr key={product.id} class="slds-hint-parent" role="row">
+                                                            <td role="gridcell">
+                                                                <div class="slds-media slds-media_center qc-ps-product-cell">
+                                                                    <div class="slds-media__figure">
+                                                                        <lightning-icon
+                                                                            icon-name="utility:warning"
+                                                                            size="x-small"
+                                                                            class="qc-ps-warning-icon"
+                                                                            alternative-text="Tenant configuration warning">
+                                                                        </lightning-icon>
+                                                                    </div>
+                                                                    <div class="slds-media__body">
+                                                                        <a href="javascript:void(0)" class="qc-ps-link qc-ps-link_wrap">{product.name}</a>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td role="gridcell" class="qc-ps-col-qty">
+                                                                <lightning-input
+                                                                    type="number"
+                                                                    label="Quantity"
+                                                                    variant="label-hidden"
+                                                                    value={product.quantity}
+                                                                    min="1"
+                                                                    step="1"
+                                                                    data-id={product.id}
+                                                                    onchange={psHandleQtyChange}
+                                                                    class="qc-ps-qty-input">
+                                                                </lightning-input>
+                                                            </td>
+                                                            <td role="gridcell">
+                                                                <lightning-combobox
+                                                                    name="psTenant"
+                                                                    label="Tenant"
+                                                                    variant="label-hidden"
+                                                                    value={product.tenant}
+                                                                    options={psTenantStatusOptions}
+                                                                    disabled
+                                                                    class="qc-ps-tenant-pick"
+                                                                    data-id={product.id}>
+                                                                </lightning-combobox>
+                                                            </td>
+                                                            <td role="gridcell" class="qc-ps-col-actions">
+                                                                <div class="qc-ps-row-actions">
+                                                                    <lightning-button-icon
+                                                                        icon-name="utility:add"
+                                                                        variant="border"
+                                                                        alternative-text="Add bundle"
+                                                                        title="Add bundle"
+                                                                        data-id={product.id}
+                                                                        onclick={psHandleAddBundle}>
+                                                                    </lightning-button-icon>
+                                                                    <lightning-button-icon
+                                                                        icon-name="utility:edit_1"
+                                                                        variant="border"
+                                                                        alternative-text="Edit bundle"
+                                                                        title="Edit bundle"
+                                                                        data-id={product.id}
+                                                                        onclick={psHandleEditBundle}>
+                                                                    </lightning-button-icon>
+                                                                    <lightning-button-icon
+                                                                        icon-name="utility:delete_1"
+                                                                        variant="border"
+                                                                        alternative-text="Delete product"
+                                                                        title="Delete"
+                                                                        data-id={product.id}
+                                                                        onclick={psHandleDelete}>
+                                                                    </lightning-button-icon>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </template>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Steps 2–5: placeholder panels -->
+                <template lwc:else>
+                    <div class="qc-form-panel qc-step-placeholder">
+                        <p class="slds-text-heading_small slds-text-color_weak">{currentStepLabel} — coming soon</p>
+                    </div>
+                </template>
+
+            </div>
+
+        </div>
+
+        <!-- Bottom Action Bar — sticky footer, persists across all steps -->
+        <div class="qc-action-bar" role="toolbar" aria-label="Step navigation">
+            <div class="qc-action-bar__left">
+                <lightning-button
+                    label="Cancel"
+                    variant="neutral"
+                    onclick={handleCancel}>
+                </lightning-button>
+                <template lwc:if={hasPrevStep}>
+                    <lightning-button
+                        label={prevStepLabel}
+                        variant="neutral"
+                        icon-name="utility:chevronleft"
+                        icon-position="left"
+                        onclick={handleBack}>
+                    </lightning-button>
+                </template>
+            </div>
+            <div class="qc-action-bar__right">
+                <lightning-button
+                    label={nextButtonLabel}
+                    variant="brand"
+                    icon-name="utility:chevronright"
+                    icon-position="right"
+                    onclick={handleNext}>
+                </lightning-button>
+            </div>
+        </div>
+
+    </div>
+</template>

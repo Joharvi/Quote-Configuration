@@ -104,7 +104,7 @@ export default class PageHeader extends LightningElement {
     }
 
     get showActions() {
-        return !this.isBase;
+        return true;
     }
 
     get showSwitcher() {

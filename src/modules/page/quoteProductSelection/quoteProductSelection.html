@@ -1,0 +1,371 @@
+<template>
+    <div class={pageClass}>
+
+        <!-- Page Header -->
+        <div class="slds-page-header qc-header" aria-label="Quote Configurator">
+            <div class="slds-page-header__row">
+                <div class="slds-page-header__col-title">
+                    <div class="slds-media slds-media_center">
+                        <div class="slds-media__figure">
+                            <lightning-icon
+                                icon-name="standard:quotes"
+                                size="small"
+                                alternative-text="Quote">
+                            </lightning-icon>
+                        </div>
+                        <div class="slds-media__body">
+                            <div class="slds-page-header__name">
+                                <div class="slds-page-header__name-title">
+                                    <h1>
+                                        <span class="slds-page-header__title qc-header__title">Quote Configurator</span>
+                                    </h1>
+                                </div>
+                            </div>
+                            <p class="slds-page-header__name-meta qc-header__meta">Quote: Q-00000 &nbsp;|&nbsp; Acme Corp NBA Core Edition &nbsp;|&nbsp; Approval Status: Quote Not Created</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-page-header__col-actions">
+                    <div class="slds-page-header__controls">
+                        <div class="slds-page-header__control">
+                            <lightning-button-group>
+                                <lightning-button label="Save and Exit" variant="neutral" onclick={handleSaveExit}></lightning-button>
+                                <lightning-button label="Sales Support" variant="brand" onclick={handleSalesSupport}></lightning-button>
+                            </lightning-button-group>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Body -->
+        <div class="qc-body">
+
+            <!-- Progress Path -->
+            <div class="slds-path qc-path" aria-label="Quote Configurator Progress">
+                <div class="slds-path__track">
+                    <div class="slds-grid slds-path__scroller-container qc-path__scroller-container">
+                        <div class="slds-path__scroller qc-path__scroller" role="application">
+                            <div class="slds-path__scroller_inner qc-path__scroller-inner">
+                                <ul class="slds-path__nav qc-path__nav" role="listbox" aria-orientation="horizontal">
+                                    <li class="slds-path__item qc-path__item slds-is-complete" role="presentation">
+                                        <a class="slds-path__link" href="javascript:void(0)" role="option" tabindex="-1" aria-selected="false" title="Quote Header">
+                                            <span class="slds-path__stage">
+                                                <lightning-icon icon-name="utility:check" size="x-small" alternative-text="Completed"></lightning-icon>
+                                            </span>
+                                            <span class="slds-path__title">Quote Header</span>
+                                        </a>
+                                    </li>
+                                    <li class="slds-path__item qc-path__item slds-is-current slds-is-active" role="presentation">
+                                        <a class="slds-path__link" href="javascript:void(0)" role="option" tabindex="0" aria-selected="true" title="Product Selection">
+                                            <span class="slds-path__stage"><span class="slds-assistive-text">Current Stage:</span></span>
+                                            <span class="slds-path__title">Product Selection</span>
+                                        </a>
+                                    </li>
+                                    <li class="slds-path__item qc-path__item slds-is-incomplete" role="presentation">
+                                        <a class="slds-path__link" href="javascript:void(0)" role="option" tabindex="-1" aria-selected="false" title="Pricing">
+                                            <span class="slds-path__stage"></span>
+                                            <span class="slds-path__title">Pricing</span>
+                                        </a>
+                                    </li>
+                                    <li class="slds-path__item qc-path__item slds-is-incomplete" role="presentation">
+                                        <a class="slds-path__link" href="javascript:void(0)" role="option" tabindex="-1" aria-selected="false" title="Billing Information">
+                                            <span class="slds-path__stage"></span>
+                                            <span class="slds-path__title">Billing Information</span>
+                                        </a>
+                                    </li>
+                                    <li class="slds-path__item qc-path__item slds-is-incomplete" role="presentation">
+                                        <a class="slds-path__link" href="javascript:void(0)" role="option" tabindex="-1" aria-selected="false" title="Special Terms">
+                                            <span class="slds-path__stage"></span>
+                                            <span class="slds-path__title">Special Terms</span>
+                                        </a>
+                                    </li>
+                                    <li class="slds-path__item qc-path__item qc-path__item_final slds-is-incomplete" role="presentation">
+                                        <a class="slds-path__link qc-path__link_final" href="javascript:void(0)" role="option" tabindex="-1" aria-selected="false" title="Quote Review">
+                                            <span class="slds-path__stage"></span>
+                                            <span class="slds-path__title">Quote Review</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quote Issues Widget -->
+            <ui-quote-issues-widget
+                product-count={selectedProducts.length}
+                issues={quoteIssues}
+                show-configure-tenant={showConfigureTenantBtn}
+                show-suggested-products={hasSelectedProducts}
+                onconfiguretenant={handleConfigureTenant}
+                onsuggestedproducts={handleSuggestedProducts}>
+            </ui-quote-issues-widget>
+
+            <!-- Workspace: Catalog + Selected Products -->
+            <div class="qc-workspace">
+
+                <!-- Product Catalog Panel -->
+                <div class="qc-panel">
+                    <div class="qc-panel__header">
+                        <lightning-icon icon-name="standard:price_books" size="small" alternative-text="Product Catalog"></lightning-icon>
+                        <h2 class="qc-panel__title">Product Catalog</h2>
+                    </div>
+                    <div class="qc-panel__filters">
+                        <lightning-combobox
+                            name="category"
+                            label="Category"
+                            value={selectedCategory}
+                            options={categoryOptions}
+                            variant="label-hidden"
+                            class="qc-filter-pick"
+                            onchange={handleCategoryChange}>
+                        </lightning-combobox>
+                        <lightning-input
+                            type="search"
+                            label="Search Products"
+                            variant="label-hidden"
+                            placeholder="Search Products or Bundles"
+                            value={searchTerm}
+                            class="qc-filter-search"
+                            onchange={handleSearchChange}>
+                        </lightning-input>
+                    </div>
+                    <div class="qc-catalog-wrap">
+                        <table
+                            class="slds-table slds-table_bordered slds-table_fixed-layout qc-table"
+                            role="grid"
+                            aria-label="Product Catalog">
+                            <thead>
+                                <tr class="slds-line-height_reset">
+                                    <th class="slds-text-title_caps" scope="col">
+                                        <div class="slds-truncate" title="Product Name">Product Name</div>
+                                    </th>
+                                    <th class="slds-text-title_caps qc-col-price" scope="col">
+                                        <div class="slds-truncate" title="List Price">List Price</div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={filteredCatalogItems} for:item="product">
+                                    <tr
+                                        key={product.id}
+                                        class="slds-hint-parent qc-catalog-row"
+                                        role="row"
+                                        tabindex="0"
+                                        data-id={product.id}
+                                        onclick={handleProductSelect}
+                                        onkeydown={handleCatalogKeydown}
+                                        aria-label={product.selectLabel}>
+                                        <td role="gridcell">
+                                            <div class="slds-truncate" title={product.name}>
+                                                <a href="javascript:void(0)" class="qc-product-link" tabindex="-1">{product.name}</a>
+                                            </div>
+                                        </td>
+                                        <td role="gridcell" class="qc-col-price">
+                                            <div class="slds-truncate" title={product.price}>{product.price}</div>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="qc-panel__footer">
+                        <span class="qc-panel__count">{catalogCount}</span>
+                        <div class="qc-pagination" role="navigation" aria-label="Catalog pagination">
+                            <button class="qc-pagination__btn" type="button" aria-label="First page" disabled>First</button>
+                            <button class="qc-pagination__btn" type="button" aria-label="Previous page" disabled>Prev</button>
+                            <span class="qc-pagination__page" aria-current="page">1</span>
+                            <span class="qc-pagination__sep">of 2</span>
+                            <button class="qc-pagination__btn" type="button" aria-label="Next page">Next</button>
+                            <button class="qc-pagination__btn" type="button" aria-label="Last page">Last</button>
+                        </div>
+                        <div class="qc-page-size">
+                            <lightning-combobox
+                                name="pageSize"
+                                label="Page size"
+                                value="20"
+                                options={pageSizeOptions}
+                                variant="label-inline"
+                                class="qc-page-size-pick">
+                            </lightning-combobox>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Selected Products Panel -->
+                <div class="qc-panel">
+                    <div class="qc-sel-header">
+                        <div class="qc-sel-header__left">
+                            <lightning-icon icon-name="utility:cart" size="small" alternative-text="Selected Products"></lightning-icon>
+                            <h2 class="qc-panel__title">{selectedCountLabel}</h2>
+                        </div>
+                        <div class="qc-sel-header__controls">
+                            <lightning-combobox
+                                name="filterByTenant"
+                                label="Filter by Tenant"
+                                value=""
+                                placeholder="Filter by Tenant"
+                                options={tenantFilterOptions}
+                                variant="label-hidden"
+                                class="qc-filter-pick qc-filter-pick_sm">
+                            </lightning-combobox>
+                            <lightning-combobox
+                                name="selectCart"
+                                label="Select Cart"
+                                value=""
+                                placeholder="Select Cart"
+                                options={cartOptions}
+                                variant="label-hidden"
+                                class="qc-filter-pick qc-filter-pick_sm">
+                            </lightning-combobox>
+                            <lightning-button-icon
+                                icon-name="utility:cart"
+                                variant="border"
+                                alternative-text="Cart actions"
+                                title="Cart actions">
+                            </lightning-button-icon>
+                            <lightning-button-icon
+                                icon-name="utility:delete"
+                                variant="border"
+                                alternative-text="Delete selected products"
+                                title="Delete selected">
+                            </lightning-button-icon>
+                        </div>
+                    </div>
+                    <div class="qc-sel-body">
+                        <!-- Empty state -->
+                        <template lwc:if={showEmptySelected}>
+                            <div class="qc-empty-state" role="status" aria-label="No products selected">
+                                <div class="qc-empty-state__icon">
+                                    <lightning-icon
+                                        icon-name="standard:search"
+                                        size="large"
+                                        alternative-text="No products selected">
+                                    </lightning-icon>
+                                </div>
+                                <div class="qc-empty-state__text">
+                                    <p class="slds-text-body_regular">No product selected.</p>
+                                    <p class="slds-text-body_regular">Select a product to continue.</p>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- Active: selected products table -->
+                        <template lwc:else>
+                            <div class="qc-sel-table-wrap">
+                                <table
+                                    class="slds-table slds-table_bordered slds-table_fixed-layout qc-table qc-sel-table"
+                                    role="grid"
+                                    aria-label="Selected Products"
+                                    aria-live="polite">
+                                    <thead>
+                                        <tr class="slds-line-height_reset">
+                                            <th class="slds-text-title_caps" scope="col">
+                                                <div class="slds-truncate" title="Product Name">Product Name</div>
+                                            </th>
+                                            <th class="slds-text-title_caps qc-col-qty" scope="col">
+                                                <div class="slds-truncate" title="Quantity">Quantity</div>
+                                            </th>
+                                            <th class="slds-text-title_caps" scope="col">
+                                                <div class="slds-truncate" title="Tenant">Tenant</div>
+                                            </th>
+                                            <th class="qc-col-actions" scope="col">
+                                                <span class="slds-assistive-text">Actions</span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <template for:each={selectedProducts} for:item="product">
+                                            <tr key={product.id} class="slds-hint-parent" role="row">
+                                                <td role="gridcell">
+                                                    <div class="slds-media slds-media_center qc-sel-product-cell">
+                                                        <template lwc:if={product.showWarning}>
+                                                            <div class="slds-media__figure">
+                                                                <lightning-icon
+                                                                    icon-name="utility:warning"
+                                                                    size="x-small"
+                                                                    class="qc-warning-icon"
+                                                                    alternative-text="Tenant configuration required">
+                                                                </lightning-icon>
+                                                            </div>
+                                                        </template>
+                                                        <div class="slds-media__body">
+                                                            <a href="javascript:void(0)" class="qc-product-link qc-product-link_wrap">{product.name}</a>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td role="gridcell" class="qc-col-qty">
+                                                    <lightning-input
+                                                        type="number"
+                                                        label="Quantity"
+                                                        variant="label-hidden"
+                                                        value={product.quantity}
+                                                        min="1"
+                                                        step="1"
+                                                        data-id={product.id}
+                                                        onchange={handleQuantityChange}
+                                                        class="qc-qty-input">
+                                                    </lightning-input>
+                                                </td>
+                                                <td role="gridcell">
+                                                    <lightning-input
+                                                        label="Tenant"
+                                                        variant="label-hidden"
+                                                        value={product.tenantDisplay}
+                                                        read-only
+                                                        class="qc-tenant-input">
+                                                    </lightning-input>
+                                                </td>
+                                                <td role="gridcell" class="qc-col-actions">
+                                                    <div class="qc-row-actions">
+                                                        <lightning-button-icon
+                                                            icon-name="utility:edit"
+                                                            variant="border"
+                                                            alternative-text="Configure tenant"
+                                                            title="Configure tenant"
+                                                            data-id={product.id}
+                                                            onclick={handleEditTenant}>
+                                                        </lightning-button-icon>
+                                                        <lightning-button-icon
+                                                            icon-name="utility:delete"
+                                                            variant="border"
+                                                            alternative-text="Delete product"
+                                                            title="Delete"
+                                                            data-id={product.id}
+                                                            onclick={handleDeleteProduct}>
+                                                        </lightning-button-icon>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </template>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step Navigation -->
+            <div class="qc-step-nav">
+                <lightning-button
+                    label="Quote Header"
+                    variant="neutral"
+                    icon-name="utility:chevronleft"
+                    icon-position="left"
+                    onclick={handleBackStep}>
+                </lightning-button>
+                <lightning-button
+                    label="Pricing"
+                    variant="brand"
+                    icon-name="utility:chevronright"
+                    icon-position="right"
+                    onclick={handleNextStep}>
+                </lightning-button>
+            </div>
+
+        </div>
+    </div>
+</template>

@@ -1,0 +1,389 @@
+/* ============================================================
+   Page root
+   ============================================================ */
+
+.qc-page {
+    min-height: 100%;
+    background-color: var(--slds-g-color-surface-container-2, #f3f3f3);
+    display: flex;
+    flex-direction: column;
+}
+
+/* ============================================================
+   Page Header
+   ============================================================ */
+
+.qc-header {
+    background-color: var(--slds-g-color-neutral-base-100, #fff);
+    /* 85px fixed header height per design spec; no SLDS sizing hook maps to this value */
+    min-height: 85px;
+    padding: var(--slds-g-spacing-4, 1rem);
+    display: flex;
+    align-items: center;
+    border-bottom: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-border-1, #c9c9c9);
+}
+
+.qc-header__title {
+    /* 28px per spec; slds-g-font-scale-5 = 1.75rem ≈ 28px */
+    font-size: var(--slds-g-font-scale-5, 1.75rem);
+    font-weight: var(--slds-g-font-weight-7, 700);
+    line-height: var(--slds-g-font-line-height-2, 1.25);
+    color: var(--slds-g-color-on-surface-2, #2e2e2e);
+}
+
+.qc-header__meta {
+    font-size: var(--slds-g-font-size-base, 13px);
+    color: var(--slds-g-color-on-surface-2, #2e2e2e);
+    margin-top: var(--slds-g-spacing-1, 0.25rem);
+}
+
+/* ============================================================
+   Body
+   ============================================================ */
+
+.qc-body {
+    /* ~32px horizontal inset per spec; slds-g-spacing-6 = 2rem = 32px */
+    padding: var(--slds-g-spacing-4, 1rem) var(--slds-g-spacing-6, 2rem) var(--slds-g-spacing-6, 2rem);
+    display: flex;
+    flex-direction: column;
+    gap: var(--slds-g-spacing-4, 1rem);
+    flex: 1;
+}
+
+/* ============================================================
+   Progress Path
+   ============================================================ */
+
+.qc-path {
+    /* 32px path height per design spec; slds-g-sizing-9 = 32px */
+    height: var(--slds-g-sizing-9, 32px);
+    overflow: hidden;
+}
+
+.qc-path__scroller-container,
+.qc-path__scroller,
+.qc-path__scroller-inner {
+    overflow: hidden;
+}
+
+.qc-path__nav {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.qc-path__item {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.qc-path__link_final {
+    border-radius: 0 var(--slds-g-radius-border-1, 2px) var(--slds-g-radius-border-1, 2px) 0;
+}
+
+/* ============================================================
+   Tenant read-only input in selected-products row
+   ============================================================ */
+
+.qc-tenant-input {
+    display: block;
+}
+
+/* ============================================================
+   Workspace: two equal columns
+   ============================================================ */
+
+.qc-workspace {
+    display: flex;
+    /* 16px gap per spec; slds-g-spacing-4 = 1rem = 16px */
+    gap: var(--slds-g-spacing-4, 1rem);
+    flex: 1;
+    min-height: 0;
+}
+
+/* ============================================================
+   Panel shell (shared by catalog + selected)
+   ============================================================ */
+
+.qc-panel {
+    flex: 1 1 0;
+    min-width: 0;
+    background-color: var(--slds-g-color-neutral-base-100, #fff);
+    border: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-border-1, #c9c9c9);
+    border-radius: var(--slds-g-radius-border-3, 0.75rem);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    /* ~517px empty-state height per spec; no SLDS sizing hook maps to this value */
+    min-height: 517px;
+}
+
+/* Shorter panels when a product is selected (warning widget adds vertical space) */
+.qc-page_active .qc-panel {
+    /* ~463px active-state height per spec; no SLDS sizing hook maps to this value */
+    min-height: 463px;
+}
+
+.qc-panel__header {
+    display: flex;
+    align-items: center;
+    gap: var(--slds-g-spacing-2, 0.5rem);
+    padding: var(--slds-g-spacing-3, 0.75rem) var(--slds-g-spacing-4, 1rem);
+    border-bottom: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-border-1, #c9c9c9);
+}
+
+.qc-panel__title {
+    /* 16px per spec; slds-g-font-scale-2 = 1rem = 16px */
+    font-size: var(--slds-g-font-scale-2, 1rem);
+    font-weight: var(--slds-g-font-weight-7, 700);
+    color: var(--slds-g-color-on-surface-2, #2e2e2e);
+    margin: 0;
+}
+
+/* ============================================================
+   Catalog filters
+   ============================================================ */
+
+.qc-panel__filters {
+    display: flex;
+    gap: var(--slds-g-spacing-3, 0.75rem);
+    padding: var(--slds-g-spacing-3, 0.75rem) var(--slds-g-spacing-4, 1rem);
+    border-bottom: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-border-1, #c9c9c9);
+}
+
+.qc-filter-pick {
+    /* slds-g-sizing-13 = 10rem = 160px; minimum width for category picker */
+    min-width: var(--slds-g-sizing-13, 10rem);
+}
+
+.qc-filter-search {
+    flex: 1;
+}
+
+/* ============================================================
+   Catalog table area (scrolls independently, footer stays fixed)
+   ============================================================ */
+
+.qc-catalog-wrap {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* 13px table content per spec */
+.qc-table {
+    font-size: var(--slds-g-font-size-base, 13px);
+    /* full table width; no SLDS sizing hook equivalent for 100% */
+    width: 100%;
+}
+
+.qc-col-price {
+    /* ~120px for price column; no SLDS sizing hook maps to this value */
+    width: 120px;
+    text-align: right;
+}
+
+.qc-catalog-row {
+    cursor: pointer;
+}
+
+.qc-catalog-row:hover td {
+    background-color: var(--slds-g-color-surface-container-1, #f9f9f9);
+}
+
+.qc-catalog-row:focus {
+    outline: var(--slds-g-sizing-border-2, 2px) solid var(--slds-g-color-brand-base-60, #0176d3);
+    outline-offset: calc(var(--slds-g-sizing-border-2, 2px) * -1);
+}
+
+.qc-product-link {
+    color: var(--slds-g-color-brand-base-60, #0176d3);
+    text-decoration: none;
+}
+
+.qc-product-link:hover {
+    text-decoration: underline;
+}
+
+.qc-product-link_wrap {
+    white-space: normal;
+    word-break: break-word;
+}
+
+/* ============================================================
+   Catalog footer
+   ============================================================ */
+
+.qc-panel__footer {
+    display: flex;
+    align-items: center;
+    gap: var(--slds-g-spacing-3, 0.75rem);
+    padding: var(--slds-g-spacing-2, 0.5rem) var(--slds-g-spacing-4, 1rem);
+    border-top: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-border-1, #c9c9c9);
+    flex-shrink: 0;
+    flex-wrap: wrap;
+}
+
+.qc-panel__count {
+    font-size: var(--slds-g-font-size-base, 13px);
+    color: var(--slds-g-color-on-surface-1, #5c5c5c);
+    white-space: nowrap;
+}
+
+.qc-pagination {
+    display: flex;
+    align-items: center;
+    gap: var(--slds-g-spacing-1, 0.25rem);
+    flex: 1;
+    justify-content: center;
+}
+
+.qc-pagination__btn {
+    background: none;
+    border: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-border-1, #c9c9c9);
+    border-radius: var(--slds-g-radius-border-1, 2px);
+    padding: var(--slds-g-spacing-1, 0.25rem) var(--slds-g-spacing-2, 0.5rem);
+    font-size: var(--slds-g-font-size-base, 13px);
+    color: var(--slds-g-color-brand-base-60, #0176d3);
+    cursor: pointer;
+}
+
+.qc-pagination__btn:disabled {
+    color: var(--slds-g-color-on-surface-1, #5c5c5c);
+    cursor: not-allowed;
+}
+
+.qc-pagination__btn:not(:disabled):hover {
+    background-color: var(--slds-g-color-surface-container-1, #f9f9f9);
+}
+
+.qc-pagination__btn:focus-visible {
+    outline: var(--slds-g-sizing-border-2, 2px) solid var(--slds-g-color-brand-base-60, #0176d3);
+    outline-offset: var(--slds-g-spacing-1, 0.25rem);
+}
+
+.qc-pagination__page {
+    font-size: var(--slds-g-font-size-base, 13px);
+    font-weight: var(--slds-g-font-weight-7, 700);
+    color: var(--slds-g-color-on-surface-2, #2e2e2e);
+    padding: 0 var(--slds-g-spacing-1, 0.25rem);
+}
+
+.qc-pagination__sep {
+    font-size: var(--slds-g-font-size-base, 13px);
+    color: var(--slds-g-color-on-surface-1, #5c5c5c);
+}
+
+.qc-page-size {
+    white-space: nowrap;
+}
+
+/* ============================================================
+   Selected Products panel: header controls
+   ============================================================ */
+
+.qc-sel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--slds-g-spacing-2, 0.5rem);
+    padding: var(--slds-g-spacing-3, 0.75rem) var(--slds-g-spacing-4, 1rem);
+    border-bottom: var(--slds-g-sizing-border-1, 1px) solid var(--slds-g-color-border-1, #c9c9c9);
+    flex-wrap: wrap;
+}
+
+.qc-sel-header__left {
+    display: flex;
+    align-items: center;
+    gap: var(--slds-g-spacing-2, 0.5rem);
+}
+
+.qc-sel-header__controls {
+    display: flex;
+    align-items: center;
+    gap: var(--slds-g-spacing-2, 0.5rem);
+    flex-wrap: wrap;
+}
+
+.qc-filter-pick_sm {
+    /* ~140px for smaller header pickers; no SLDS sizing hook maps to this value */
+    min-width: 140px;
+}
+
+/* ============================================================
+   Selected Products panel: body
+   ============================================================ */
+
+.qc-sel-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Empty state illustration */
+.qc-empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--slds-g-spacing-4, 1rem);
+    padding: var(--slds-g-spacing-6, 2rem);
+}
+
+.qc-empty-state__text {
+    text-align: center;
+}
+
+.qc-empty-state__text p {
+    font-size: var(--slds-g-font-size-base, 13px);
+    color: var(--slds-g-color-on-surface-1, #5c5c5c);
+    margin: 0;
+}
+
+/* Selected products table */
+.qc-sel-table-wrap {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.qc-sel-table {
+    font-size: var(--slds-g-font-size-base, 13px);
+}
+
+.qc-sel-product-cell {
+    gap: var(--slds-g-spacing-2, 0.5rem);
+}
+
+.qc-warning-icon {
+    color: var(--slds-g-color-warning-1, #8c4b02);
+}
+
+.qc-col-qty {
+    /* ~90px for quantity input; no SLDS sizing hook maps to this value */
+    width: 90px;
+}
+
+.qc-col-actions {
+    width: var(--slds-g-sizing-12, 5rem);
+}
+
+.qc-row-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--slds-g-spacing-2, 0.5rem);
+    --slds-c-button-radius-border: var(--slds-g-radius-border-circle, 9999px);
+}
+
+/* ============================================================
+   Step navigation
+   ============================================================ */
+
+.qc-step-nav {
+    display: flex;
+    justify-content: center;
+    gap: var(--slds-g-spacing-4, 1rem);
+    padding: var(--slds-g-spacing-2, 0.5rem) 0 var(--slds-g-spacing-4, 1rem);
+    flex-shrink: 0;
+}

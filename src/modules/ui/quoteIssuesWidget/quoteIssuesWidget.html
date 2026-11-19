@@ -1,0 +1,102 @@
+<template>
+    <div class={containerClass} role="status" aria-live="polite" aria-label={ariaLabel}>
+
+        <!-- Flat states: empty (no products) or valid (no outstanding issues) -->
+        <template lwc:if={isFlat}>
+            <div class="qiw__header">
+                <lightning-icon
+                    icon-name={flatIconName}
+                    size="small"
+                    alternative-text="">
+                </lightning-icon>
+                <span class="qiw__label">{flatLabel}</span>
+            </div>
+        </template>
+
+        <!-- Active states: warnings-only or mixed errors/warnings — expandable -->
+        <template lwc:else>
+            <div class="qiw__header">
+                <button
+                    class="qiw__toggle slds-button slds-button_icon"
+                    type="button"
+                    aria-expanded={expandedString}
+                    onclick={handleToggle}>
+                    <lightning-icon
+                        icon-name={chevronIcon}
+                        size="x-small"
+                        alternative-text={chevronAlt}>
+                    </lightning-icon>
+                </button>
+                <span class="qiw__title">Quote Issues</span>
+                <div class="qiw__counters">
+                    <template lwc:if={hasErrors}>
+                        <lightning-icon
+                            icon-name="utility:error"
+                            size="x-small"
+                            alternative-text="errors"
+                            class="qiw__counter-icon qiw__counter-icon_error">
+                        </lightning-icon>
+                        <span class="qiw__counter-text">{errorLabel}</span>
+                    </template>
+                    <template lwc:if={hasWarnings}>
+                        <lightning-icon
+                            icon-name="utility:warning"
+                            size="x-small"
+                            alternative-text="warnings"
+                            class="qiw__counter-icon qiw__counter-icon_warning">
+                        </lightning-icon>
+                        <span class="qiw__counter-text">{warningLabel}</span>
+                    </template>
+                </div>
+                <template lwc:if={showConfigureTenant}>
+                    <lightning-button
+                        label="Configure Tenant"
+                        variant="brand"
+                        onclick={handleConfigureTenant}
+                        class="qiw__configure-btn">
+                    </lightning-button>
+                </template>
+                <span class="qiw__spacer"></span>
+                <template lwc:if={showSuggestedProducts}>
+                    <lightning-button
+                        label="Suggested Products"
+                        variant="base"
+                        onclick={handleSuggestedProducts}>
+                    </lightning-button>
+                </template>
+            </div>
+
+            <!-- Expanded detail rows, one per issue -->
+            <template lwc:if={_expanded}>
+                <div class="qiw__details">
+                    <ul class="qiw__list" role="list">
+                        <template for:each={normalizedIssues} for:item="issue">
+                            <li key={issue.id} class="qiw__issue-row">
+                                <lightning-icon
+                                    icon-name={issue.severityIcon}
+                                    size="x-small"
+                                    alternative-text={issue.severityAlt}
+                                    class={issue.severityClass}>
+                                </lightning-icon>
+                                <div class="qiw__issue-content">
+                                    <span class="qiw__issue-msg">{issue.message}</span>
+                                    <template lwc:if={issue.hasAction}>
+                                        <span class="qiw__issue-sep" aria-hidden="true"> - </span>
+                                        <lightning-button
+                                            label={issue.actionLabel}
+                                            variant="base"
+                                            data-id={issue.id}
+                                            onclick={handleIssueAction}
+                                            class="qiw__inline-action">
+                                        </lightning-button>
+                                    </template>
+                                </div>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </template>
+        </template>
+
+    </div>
+</template>

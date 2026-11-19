@@ -20,12 +20,12 @@ export const APP_STORAGE_KEY = 'shell-current-app';
 export const apps = [
   {
     id: 'standard',
-    label: 'Standard App',
+    label: 'Sales',
     variant: 'standard',
     icon: 'utility:home',
     pathPrefix: '/app',
-    defaultPath: '/app',
-    pages: ['home', 'icons', 'contacts'],
+    defaultPath: '/app/quote',
+    pages: ['quoteConfigurator', 'accounts', 'opportunities', 'leads', 'reports', 'dashboards', 'productBundles', 'home', 'icons', 'contacts'],
   },
   {
     id: 'console',

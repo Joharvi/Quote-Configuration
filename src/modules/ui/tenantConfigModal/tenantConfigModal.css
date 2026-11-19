@@ -1,0 +1,149 @@
+/* ============================================================
+   Host — sets modal content width to 960px (large) content area
+   ============================================================ */
+
+:host {
+    display: block;
+}
+
+/* ============================================================
+   Product-context notification
+   ============================================================ */
+
+.tcm-notification {
+    /* 8px bottom margin separates notification from guidance */
+    margin-bottom: var(--slds-g-spacing-3, 0.75rem);
+    border-radius: var(--slds-g-radius-border-2, 0.25rem);
+    padding: var(--slds-g-spacing-3, 0.75rem) var(--slds-g-spacing-4, 1rem);
+}
+
+.tcm-notification__text {
+    font-size: var(--slds-g-font-size-base, 13px);
+    color: var(--slds-g-color-on-warning-1, #8c4b02);
+    margin: 0;
+    line-height: var(--slds-g-font-line-height-2, 1.375);
+}
+
+/* ============================================================
+   Guidance paragraph
+   ============================================================ */
+
+.tcm-guidance {
+    font-size: var(--slds-g-font-size-base, 13px);
+    color: var(--slds-g-color-on-surface-2, #2e2e2e);
+    margin: 0 0 var(--slds-g-spacing-4, 1rem) 0;
+    line-height: var(--slds-g-font-line-height-2, 1.375);
+    text-align: center;
+}
+
+/* ============================================================
+   Radio group — horizontal layout
+   ============================================================ */
+
+.tcm-radio-group {
+    display: block;
+    margin-bottom: var(--slds-g-spacing-4, 1rem);
+}
+
+/*
+ * Intentional SLDS class override: lightning-radio-group has no horizontal-layout prop.
+ * Synthetic shadow makes this the only viable approach without raw <input> elements.
+ * slds/no-slds-class-overrides warning is expected and accepted here.
+ */
+.tcm-radio-group .slds-form-element__control {
+    display: flex;
+    flex-direction: row;
+    gap: var(--slds-g-spacing-4, 1rem);
+}
+
+/* ============================================================
+   Validation error
+   ============================================================ */
+
+.tcm-error {
+    font-size: var(--slds-g-font-size-base, 13px);
+    color: var(--slds-g-color-error-1, #b60554);
+    margin: calc(var(--slds-g-spacing-2, 0.5rem) * -1) 0 var(--slds-g-spacing-3, 0.75rem);
+}
+
+/* ============================================================
+   Net-new coming soon
+   ============================================================ */
+
+.tcm-net-new {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--slds-g-spacing-6, 2rem) var(--slds-g-spacing-4, 1rem);
+}
+
+.tcm-net-new__text {
+    font-size: var(--slds-g-font-size-base, 13px);
+    color: var(--slds-g-color-on-surface-1, #5c5c5c);
+    text-align: center;
+    margin: 0;
+    line-height: var(--slds-g-font-line-height-2, 1.375);
+}
+
+/* ============================================================
+   Existing-org section
+   ============================================================ */
+
+.tcm-org-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--slds-g-spacing-3, 0.75rem);
+}
+
+.tcm-org-controls {
+    display: flex;
+    gap: var(--slds-g-spacing-3, 0.75rem);
+    align-items: flex-end;
+}
+
+.tcm-org-search {
+    flex: 1;
+}
+
+.tcm-env-filter {
+    min-width: var(--slds-g-sizing-13, 10rem);
+}
+
+/* ============================================================
+   Org table
+   ============================================================ */
+
+.tcm-table-wrap {
+    overflow-x: auto;
+}
+
+.tcm-org-table {
+    font-size: var(--slds-g-font-size-base, 13px);
+}
+
+.tcm-col-select {
+    width: var(--slds-g-sizing-10, 3rem);
+}
+
+.tcm-org-row {
+    cursor: pointer;
+}
+
+.tcm-org-row:hover td {
+    background-color: var(--slds-g-color-surface-container-1, #f9f9f9);
+}
+
+.tcm-org-row_selected td {
+    background-color: var(--slds-g-color-surface-container-3, #cfe9fe);
+}
+
+/* ============================================================
+   Quantity-allocation note
+   ============================================================ */
+
+.tcm-alloc-note {
+    font-size: var(--slds-g-font-scale-neg-1, 0.75rem);
+    color: var(--slds-g-color-on-surface-1, #5c5c5c);
+    margin: 0;
+    line-height: var(--slds-g-font-line-height-2, 1.375);
+}

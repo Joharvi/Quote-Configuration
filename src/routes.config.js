@@ -14,6 +14,48 @@
 
 export const routes = [
   {
+    path: '/accounts',
+    component: 'page-accounts',
+    title: 'Accounts',
+    navPage: 'accounts',
+    navLabel: 'Accounts',
+  },
+  {
+    path: '/opportunities',
+    component: 'page-opportunities',
+    title: 'Opportunities',
+    navPage: 'opportunities',
+    navLabel: 'Opportunities',
+  },
+  {
+    path: '/leads',
+    component: 'page-leads',
+    title: 'Leads',
+    navPage: 'leads',
+    navLabel: 'Leads',
+  },
+  {
+    path: '/reports',
+    component: 'page-reports',
+    title: 'Reports',
+    navPage: 'reports',
+    navLabel: 'Reports',
+  },
+  {
+    path: '/dashboards',
+    component: 'page-dashboards',
+    title: 'Dashboards',
+    navPage: 'dashboards',
+    navLabel: 'Dashboards',
+  },
+  {
+    path: '/product-bundles',
+    component: 'page-product-bundles',
+    title: 'Product Bundles',
+    navPage: 'productBundles',
+    navLabel: 'Product Bundles',
+  },
+  {
     path: '/',
     component: 'page-home',
     title: 'Home',
@@ -39,6 +81,19 @@ export const routes = [
     component: 'page-contact-detail',
     title: (params) => `Contact ${params.id}`,
     navHighlight: 'contacts',
+  },
+  {
+    path: '/quote',
+    component: 'page-quote-configurator',
+    title: 'Quote Configurator',
+    navPage: 'quoteConfigurator',
+    navLabel: 'Quote',
+  },
+  {
+    path: '/quote/product-selection',
+    component: 'page-quote-product-selection',
+    title: 'Quote Configurator — Product Selection',
+    navHighlight: 'quoteConfigurator',
   },
   {
     path: '/',

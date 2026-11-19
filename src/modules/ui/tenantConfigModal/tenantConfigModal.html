@@ -1,0 +1,152 @@
+<template>
+    <lightning-modal-header label="Tenant &amp; Fulfillment Configuration">
+    </lightning-modal-header>
+
+    <lightning-modal-body>
+
+        <!-- Product-context notification (amber / warning) -->
+        <div class="tcm-notification slds-scoped-notification slds-media slds-media_center slds-theme_warning" role="status">
+            <div class="slds-media__figure slds-media__figure_fixed-width">
+                <lightning-icon
+                    icon-name="utility:warning"
+                    size="x-small"
+                    alternative-text="Note">
+                </lightning-icon>
+            </div>
+            <div class="slds-media__body">
+                <p class="tcm-notification__text">Opened by: Add to Quote — {productName}</p>
+            </div>
+        </div>
+
+        <!-- Guidance text — visible only before a mode is chosen -->
+        <template lwc:if={showGuidance}>
+            <p class="tcm-guidance">Choose where this product lives. Add it to an existing org or create a new one.</p>
+        </template>
+
+        <!-- Assignment mode radio group -->
+        <lightning-radio-group
+            name="assignmentMode"
+            label="Assignment Mode"
+            variant="label-hidden"
+            options={assignmentOptions}
+            value={selectedMode}
+            type="radio"
+            class="tcm-radio-group"
+            onchange={handleModeChange}>
+        </lightning-radio-group>
+
+        <!-- Validation error (fires only after a failed Confirm attempt) -->
+        <template lwc:if={showValidationError}>
+            <p class="tcm-error" role="alert" aria-live="assertive">Please select an assignment option before confirming.</p>
+        </template>
+
+        <!-- ── Net-new coming soon ──────────────────────────────── -->
+        <template lwc:if={showNetNew}>
+            <div class="tcm-net-new" role="status">
+                <p class="tcm-net-new__text">Coming soon — provisioning a net-new org is not available yet.</p>
+            </div>
+        </template>
+
+        <!-- ── Existing-org content ─────────────────────────────── -->
+        <template lwc:if={showExistingOrg}>
+            <div class="tcm-org-section">
+
+                <!-- Search + environment filter row -->
+                <div class="tcm-org-controls">
+                    <lightning-input
+                        type="search"
+                        label="environment"
+                        placeholder="Search org ID or name"
+                        value={orgSearchTerm}
+                        class="tcm-org-search"
+                        onchange={handleOrgSearch}>
+                    </lightning-input>
+                    <lightning-combobox
+                        name="envFilter"
+                        label="Environment filter"
+                        variant="label-hidden"
+                        value={envFilterValue}
+                        options={envFilterOptions}
+                        class="tcm-env-filter"
+                        onchange={handleEnvFilterChange}>
+                    </lightning-combobox>
+                </div>
+
+                <!-- Org table -->
+                <div class="tcm-table-wrap">
+                    <table
+                        class="slds-table slds-table_bordered slds-table_fixed-layout tcm-org-table"
+                        role="grid"
+                        aria-label="Available orgs">
+                        <thead>
+                            <tr class="slds-line-height_reset">
+                                <th scope="col" class="tcm-col-select">
+                                    <span class="slds-assistive-text">Selection</span>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-title_caps" title="Org ID">Org ID</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-title_caps" title="Environment">Environment</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-title_caps" title="Host / Region">Host / Region</div>
+                                </th>
+                                <th scope="col">
+                                    <div class="slds-truncate slds-text-title_caps" title="Status">Status</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={filteredOrgs} for:item="org">
+                                <tr key={org.id} class={org.rowClass} role="row" data-id={org.id} onclick={handleOrgRowClick}>
+                                    <td role="gridcell" class="tcm-col-select">
+                                        <lightning-input
+                                            type="checkbox"
+                                            label={org.checkboxLabel}
+                                            variant="label-hidden"
+                                            checked={org.isSelected}
+                                            data-id={org.id}
+                                            onchange={handleOrgCheck}>
+                                        </lightning-input>
+                                    </td>
+                                    <td role="gridcell">
+                                        <div class="slds-truncate" title={org.orgId}>{org.orgId}</div>
+                                    </td>
+                                    <td role="gridcell">
+                                        <div class="slds-truncate" title={org.environment}>{org.environment}</div>
+                                    </td>
+                                    <td role="gridcell">
+                                        <div class="slds-truncate" title={org.region}>{org.region}</div>
+                                    </td>
+                                    <td role="gridcell">
+                                        <div class="slds-truncate" title={org.status}>{org.status}</div>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Quantity-allocation note -->
+                <p class="tcm-alloc-note">100% of the quantity goes to one environment. Quantity splits are not supported yet.</p>
+
+            </div>
+        </template>
+
+    </lightning-modal-body>
+
+    <lightning-modal-footer>
+        <lightning-button
+            label="Cancel"
+            variant="neutral"
+            onclick={handleCancel}>
+        </lightning-button>
+        <lightning-button
+            label="Confirm"
+            variant="brand"
+            onclick={handleConfirm}
+            class="slds-m-left_x-small">
+        </lightning-button>
+    </lightning-modal-footer>
+</template>
